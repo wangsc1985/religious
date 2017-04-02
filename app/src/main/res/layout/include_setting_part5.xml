@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5、持戒记录："
+        android:textColor="#000000"
+        android:textSize="14dp"
+        android:typeface="monospace" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView12"
+            style="@style/MyTextViewTitle2Style"
+            android:text="状态：" />
+
+        <Button
+            android:id="@+id/button_recordStatus"
+            style="@style/MyButtonStyle"
+            android:text="已开启" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_opened"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView13"
+                style="@style/MyTextViewTitle2Style"
+                android:text="周期计算方式：" />
+
+            <Button
+                android:id="@+id/button_targetWay"
+                style="@style/MyButtonStyle"
+                android:text="自动" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_birthday"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView123"
+                style="@style/MyTextViewTitle2Style"
+                android:text="生日：" />
+
+            <Button
+                android:id="@+id/button_birthday"
+                style="@style/MyButtonStyle"
+                android:text="设置生日" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView132"
+                style="@style/MyTextViewTitle2Style"
+                android:text="行房周期：" />
+
+            <Button
+                android:id="@+id/button_customTarget"
+                style="@style/MyButtonStyle"
+                android:text="设置时间间隔" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView131"
+            style="@style/MyTextViewTitle2Style"
+            android:text="说明：周期计算方式设置为“自动”时，行房周期由系统依据千金方来制定。设置为“自定义”时，行房周期则由自己设定。" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.wang17.religiouscalendar.fragment.ActionBarFragment"
+    android:background="@color/colorPrimary"
+    android:padding="5dp">
+
+
+    <TextView
+        android:text="南无阿弥陀佛"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_title"
+        android:layout_centerInParent="true"
+        android:textSize="20dp"
+        android:fontFamily="casual"
+        android:textColor="@color/bright_foreground_material_dark" />
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:id="@+id/imageView_back"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:src="@drawable/back"
+        android:scaleType="fitCenter" />
+
+</RelativeLayout>
