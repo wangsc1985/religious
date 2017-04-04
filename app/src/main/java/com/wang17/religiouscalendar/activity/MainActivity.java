@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View include_banner;
     private GridView userCalender;
     private PopupWindow mPopWindow;
-    private LinearLayout layoutJinJi, layoutJyw, layoutRecord;
+    private LinearLayout layoutJinJi, layoutJyw, layoutYgx,layoutRecord;
     private ProgressBar progressBarRecords;
     // 类变量
     private ProgressDialog progressDialog;
@@ -263,6 +263,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
             //region 左侧菜单操作
+            layoutYgx = (LinearLayout)findViewById(R.id.layout_ygx);
+            layoutYgx.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, IntroduceActivity.class);
+                    intent.putExtra(IntroduceActivity.PARAM_NAME, IntroduceActivity.ItemName.印光大师序.toString());
+                    startActivity(intent);
+                }
+            });
             layoutJinJi = (LinearLayout) findViewById(R.id.layout_jinji);
             layoutJyw = (LinearLayout) findViewById(R.id.layout_jyw);
             layoutJinJi.setOnClickListener(new View.OnClickListener() {
@@ -379,7 +388,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             layoutRecord.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    showAddSexualDayDialog();
                 }
             });
 
@@ -646,7 +655,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 || religious.contains("一年内亡")
                 || religious.contains("必得急疾")
                 || religious.contains("生子五官四肢不全。父母有灾")
-                || religious.contains("减寿五年")) {
+                || religious.contains("减寿五年")
+                || religious.contains("恶胎")) {
             return 1;
         }
         return 0;
@@ -1359,8 +1369,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                     break;
                 case TO_SEXUAL_RECORD_ACTIVITY:
-                    // TODO: 2017/3/20 戒期时间被修改之后，需要执行的操作。
-
+                    initRecordPart();
                     break;
             }
         } catch (NumberFormatException e) {
@@ -1369,6 +1378,107 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
+    public void showAddSexualDayDialog(){
+
+        View view = View.inflate(MainActivity.this,R.layout.inflate_dialog_date_picker,null);
+        android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(MainActivity.this).setView(view).create();
+        dialog.setTitle("设定时间");
+
+        DateTime dateTime = new DateTime();
+        final int year = dateTime.getYear();
+        int month = dateTime.getMonth();
+//        int maxDay = dateTime.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int day = dateTime.getDay();
+        int hour = dateTime.getHour();
+
+        String[] yearNumbers = new String[3];
+        for (int i = year-2; i <=year; i++) {
+            yearNumbers[i-year+2] = i + "年";
+        }
+        String[] monthNumbers = new String[12];
+        for (int i = 0; i < 12; i++) {
+            monthNumbers[i] = i+1 + "月";
+        }
+        String[] dayNumbers = new String[31];
+        for (int i = 0; i < 31; i++) {
+            dayNumbers[i] = i+1 + "日";
+        }
+        String[] hourNumbers = new String[24];
+        for (int i = 0; i < 24; i++) {
+            hourNumbers[i] = i + "点";
+        }
+        final NumberPicker npYear = (NumberPicker) view.findViewById(R.id.npYear);
+        final NumberPicker npMonth = (NumberPicker) view.findViewById(R.id.npMonth);
+        final NumberPicker npDay = (NumberPicker) view.findViewById(R.id.npDay);
+        final NumberPicker npHour = (NumberPicker) view.findViewById(R.id.npHour);
+        npYear.setMinValue(year - 2);
+        npYear.setMaxValue(year);
+        npYear.setValue(year);
+        npYear.setDisplayedValues(yearNumbers);
+        npYear.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+        npMonth.setMinValue(1);
+        npMonth.setMaxValue(12);
+        npMonth.setDisplayedValues(monthNumbers);
+        npMonth.setValue(month+1);
+        npMonth.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+        npDay.setMinValue(1);
+        npDay.setMaxValue(31);
+        npDay.setDisplayedValues(dayNumbers);
+        npDay.setValue(day);
+        npDay.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+        npHour.setMinValue(0);
+        npHour.setMaxValue(23);
+        npHour.setDisplayedValues(hourNumbers);
+        npHour.setValue(hour);
+        npHour.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+
+
+        npMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                DateTime selected = new DateTime(npYear.getValue(), npMonth.getValue() - 1, 1);
+                int max = selected.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+                int day = npDay.getValue();
+                npDay.setMaxValue(max);
+                if (day > max) {
+                    npDay.setValue(1);
+                } else {
+                    npDay.setValue(day);
+                }
+            }
+        });
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    int year = npYear.getValue();
+                    int month = npMonth.getValue() - 1;
+                    int day = npDay.getValue();
+                    int hour = npHour.getValue();
+                    DateTime selectedDateTime = new DateTime(year, month, day, hour, 0, 0);
+                    SexualDay sexualDay = new SexualDay(selectedDateTime);
+                    dataContext.addSexualDay(sexualDay);
+                    initRecordPart();
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    _Helper.printException(MainActivity.this,e);
+                }
+            }
+        });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    _Helper.printException(MainActivity.this,e);
+                }
+            }
+        });
+        dialog.show();
+    }
 
     //region 友盟统计权限
     @NeedsPermission({Manifest.permission.INTERNET,

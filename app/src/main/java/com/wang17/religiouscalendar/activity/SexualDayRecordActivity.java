@@ -29,6 +29,7 @@ import com.wang17.religiouscalendar.model.DateTime;
 import com.wang17.religiouscalendar.model.Setting;
 import com.wang17.religiouscalendar.model.SexualDay;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class SexualDayRecordActivity extends AppCompatActivity  implements ActionBarFragment.OnActionFragmentBackListener {
@@ -293,6 +294,21 @@ public class SexualDayRecordActivity extends AppCompatActivity  implements Actio
         npHour.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
 
 
+        npMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                DateTime selected = new DateTime(npYear.getValue(), npMonth.getValue() - 1, 1);
+                int max = selected.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+                int day = npDay.getValue();
+                npDay.setMaxValue(max);
+                if (day > max) {
+                    npDay.setValue(1);
+                } else {
+                    npDay.setValue(day);
+                }
+            }
+        });
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

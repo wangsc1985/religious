@@ -50,7 +50,7 @@
             <TextView
                 android:id="@+id/textView13"
                 style="@style/MyTextViewTitle2Style"
-                android:text="周期计算方式：" />
+                android:text="计算方式：" />
 
             <Button
                 android:id="@+id/button_targetWay"
