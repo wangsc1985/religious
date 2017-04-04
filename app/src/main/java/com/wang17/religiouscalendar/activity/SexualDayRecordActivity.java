@@ -29,6 +29,8 @@ import com.wang17.religiouscalendar.model.DateTime;
 import com.wang17.religiouscalendar.model.Setting;
 import com.wang17.religiouscalendar.model.SexualDay;
 
+import org.w3c.dom.Text;
+
 import java.io.DataOutput;
 import java.util.Calendar;
 import java.util.List;
@@ -36,7 +38,7 @@ import java.util.List;
 public class SexualDayRecordActivity extends AppCompatActivity implements ActionBarFragment.OnActionFragmentBackListener {
 
     // 视图变量
-    RelativeLayout root;
+    TextView textViewTime1, textViewTime2;
     // 类变量
     private DataContext dataContext;
     private List<SexualDay> sexualDays;
@@ -116,23 +118,25 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
 
             isDataChanged = false;
             dataContext = new DataContext(this);
-            root = (RelativeLayout) findViewById(R.id.activity_sexual_day_record);
             sexualDays = dataContext.getSexualDays(true);
+
 
             if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == true) {
                 if (dataContext.getSetting(Setting.KEYS.birthday) != null) {
                     max = _Helper.getTargetInHours(new DateTime(dataContext.getSetting(Setting.KEYS.birthday).getLong()));
                 } else {
-                    max=0;
+                    max = 0;
                 }
             } else {
                 Setting setting2 = dataContext.getSetting(Setting.KEYS.targetInMillis);
                 if (setting2 != null) {
                     max = (int) (setting2.getLong() / 3600000);
-                }else{
-                    max=0;
+                } else {
+                    max = 0;
                 }
             }
+
+            initSummary();
 
 
             ListView listView_sexualDays = (ListView) findViewById(R.id.listView_sexualDays);
@@ -154,6 +158,26 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
 
         } catch (Exception e) {
             _Helper.printException(this, e);
+        }
+    }
+
+    private void initSummary() {
+        SexualDay lastSexualDay = dataContext.getLastSexualDay();
+
+        if (max > 0 && lastSexualDay != null) {
+            textViewTime1 = (TextView) findViewById(R.id.textView_time1);
+            textViewTime2 = (TextView) findViewById(R.id.textView_time2);
+
+            long have = System.currentTimeMillis() - lastSexualDay.getDateTime().getTimeInMillis();
+            long leave = max * 3600000 - have;
+            if (leave > 0) {
+                textViewTime1.setText(DateTime.toSpanString(have, 4, 3));
+                textViewTime2.setText(DateTime.toSpanString(leave, 4, 3));
+            } else {
+                leave *= -1;
+                textViewTime1.setText(DateTime.toSpanString(have, 4, 3));
+                textViewTime2.setText("+" + DateTime.toSpanString(leave, 4, 3));
+            }
         }
     }
 
@@ -217,6 +241,7 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
                                     recordListdAdapter.notifyDataSetChanged();
                                     isDataChanged = true;
                                     dialog.cancel();
+                                    initSummary();
                                     snackbar("删除成功");
                                 }
                             }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -235,10 +260,10 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
                 textViewStartTime.setText(date.getHour() + ":" + date.getMiniteStr());
                 textViewInterval.setText(DateTime.toSpanString(interval, 4, 3));
                 //
-                if(max>0) {
+                if (max > 0) {
                     progressBar.setMax(max);
                     progressBar.setProgress((int) (interval / 3600000));
-                }else{
+                } else {
                     progressBar.setMax(100);
                     progressBar.setProgress(0);
                 }
@@ -333,6 +358,7 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
                     dataContext.updateSexualDay(sd);
                     recordListdAdapter.notifyDataSetChanged();
                     isDataChanged = true;
+                    initSummary();
                     dialog.dismiss();
                 } catch (Exception e) {
                     _Helper.printException(SexualDayRecordActivity.this, e);
@@ -354,7 +380,7 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
 
     private void snackbar(String message) {
         try {
-            Snackbar.make(root, message, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(textViewTime1, message, Snackbar.LENGTH_LONG).show();
         } catch (Exception e) {
             Log.e("wangsc", e.getMessage());
         }

@@ -138,9 +138,7 @@ public class DateTime extends GregorianCalendar {
      * @param endTag       结束标志 1：秒；2：分；3：时；4：天
      * @return
      */
-    public static String toSpanString(long timeInMillis, int startTag, int endTag) throws Exception {
-        if (startTag < endTag)
-            throw new Exception("开始标志必须大于等于结束标志");
+    public static String toSpanString(long timeInMillis, int startTag, int endTag) {
 
         String resutl = "";
         int day = (int) (timeInMillis / 60000 / 60 / 24);
