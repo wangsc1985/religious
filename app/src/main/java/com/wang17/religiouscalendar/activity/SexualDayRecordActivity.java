@@ -164,12 +164,18 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
     private void initSummary() {
         SexualDay lastSexualDay = dataContext.getLastSexualDay();
 
+        long target=0;
+        if(dataContext.getSetting(Setting.KEYS.targetAuto,true).getBoolean()==true){
+            target = _Helper.getTargetInMillis(dataContext.getSetting(Setting.KEYS.birthday).getDateTime());
+        }else{
+            target = dataContext.getSetting(Setting.KEYS.targetInMillis).getLong();
+        }
         if (max > 0 && lastSexualDay != null) {
             textViewTime1 = (TextView) findViewById(R.id.textView_time1);
             textViewTime2 = (TextView) findViewById(R.id.textView_time2);
 
             long have = System.currentTimeMillis() - lastSexualDay.getDateTime().getTimeInMillis();
-            long leave = max * 3600000 - have;
+            long leave = target - have;
             if (leave > 0) {
                 textViewTime1.setText(DateTime.toSpanString(have, 4, 3));
                 textViewTime2.setText(DateTime.toSpanString(leave, 4, 3));
