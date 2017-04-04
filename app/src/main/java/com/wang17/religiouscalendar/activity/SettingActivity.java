@@ -60,11 +60,12 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
     private MDlistdAdapter mdListAdapter;
     private List<HashMap<String, String>> mdListItems;
 
-//    private static final String BUTTON_STATUS_TEXT_OFF = "已关闭";
+    //    private static final String BUTTON_STATUS_TEXT_OFF = "已关闭";
 //    private static final String BUTTON_STATUS_TEXT_ON = "已开启";
     private static final String BUTTON_WAY_TEXT_AUTO = "自动";
     private static final String BUTTON_WAY_TEXT_CUSTOM = "自定义";
     private static final String BUTTON_TARGET_TEXT = "设定行房周期";
+    private static final String BUTTON_TARGET_AUTO_TEXT = "自动生成";
     private static final String BUTTON_BIRTHDAY_TEXT = "设定生日";
 
     @Override
@@ -120,7 +121,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             TextView textViewVersion = (TextView) findViewById(R.id.textView_Version);
             textViewVersion.setText("寿康宝鉴日历 " + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
 
-            if (Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.recordIsOpened, true).getValue()) == true) {
+            if (Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getValue()) == true) {
                 btnRecordStatus.setBackgroundResource(R.drawable.on);
 //                layoutOpened.setVisibility(View.VISIBLE);
 
@@ -148,7 +149,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             btnRecordStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (dataContext.getSetting(Setting.KEYS.recordIsOpened,false).getBoolean()==false) {
+                    if (dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getBoolean() == false) {
                         if (dataContext.getSetting(Setting.KEYS.targetAuto).getBoolean() == true) {
                             if (dataContext.getSetting(Setting.KEYS.birthday) == null) {
                                 new AlertDialog.Builder(SettingActivity.this).setMessage("请先设定生日！").show();
@@ -182,17 +183,16 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                         btnWay.setText(BUTTON_WAY_TEXT_CUSTOM);
                         layoutBirthday.setVisibility(View.GONE);
                         dataContext.editSetting(Setting.KEYS.targetAuto, false);
-                        if (dataContext.getSetting(Setting.KEYS.targetInMillis) == null) {
+                        if (dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getBoolean() == true && dataContext.getSetting(Setting.KEYS.targetInMillis) == null) {
                             showTargetDialog(SettingActivity.this);
                         } else {
                             customWayDataInit();
                         }
-
                     } else {
                         btnWay.setText(BUTTON_WAY_TEXT_AUTO);
                         layoutBirthday.setVisibility(View.VISIBLE);
                         dataContext.editSetting(Setting.KEYS.targetAuto, true);
-                        if (dataContext.getSetting(Setting.KEYS.birthday) == null) {
+                        if (dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getBoolean() == true && dataContext.getSetting(Setting.KEYS.birthday) == null) {
                             showBirthdayDialog(SettingActivity.this);
                         } else {
                             autoWayDataInit();
@@ -309,6 +309,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                 btnTarget.setText(DateTime.toSpanString(_Helper.getTargetInMillis(birthday), 4, 3));
             } else {
                 btnBirthday.setText(BUTTON_BIRTHDAY_TEXT);
+                btnTarget.setText(BUTTON_TARGET_AUTO_TEXT);
             }
         } catch (Exception e) {
             _Helper.printException(this, e);
@@ -732,6 +733,12 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     dialog.dismiss();
+                    if (dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getBoolean() == true
+                            && dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == true
+                            && dataContext.getSetting(Setting.KEYS.birthday) == null) {
+                        dataContext.editSetting(Setting.KEYS.recordIsOpened, false);
+                        btnRecordStatus.setBackgroundResource(R.drawable.off);
+                    }
                 } catch (Exception e) {
                     _Helper.printException(context, e);
                 }
@@ -748,7 +755,11 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(context).setView(view).create();
             dialog.setTitle("自定义间隔");
 
-            long target = dataContext.getSetting(Setting.KEYS.targetInMillis, 5 * 24 * 3600000).getLong();
+            long target = 5 * 24 * 3600000;
+            Setting setting = dataContext.getSetting(Setting.KEYS.targetInMillis);
+            if (setting != null) {
+                target = setting.getLong();
+            }
             int aaa = (int) (target / 3600000 / 24);
             int bbb = (int) (target % (3600000 * 24) / 3600000);
             String[] dayNumbers = new String[99];
@@ -798,6 +809,12 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                 public void onClick(DialogInterface dialog, int which) {
                     try {
                         dialog.dismiss();
+                        if (dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getBoolean() == true
+                                && dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == false
+                                && dataContext.getSetting(Setting.KEYS.targetInMillis) == null) {
+                            dataContext.editSetting(Setting.KEYS.recordIsOpened, false);
+                            btnRecordStatus.setBackgroundResource(R.drawable.off);
+                        }
                     } catch (Exception e) {
                         _Helper.printException(context, e);
                     }
