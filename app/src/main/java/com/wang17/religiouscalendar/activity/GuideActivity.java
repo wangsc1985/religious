@@ -3,6 +3,7 @@ package com.wang17.religiouscalendar.activity;
 import android.animation.AnimatorInflater;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.helper.ViewPagerAdapter;
 import com.wang17.religiouscalendar.helper._Helper;
+import com.wang17.religiouscalendar.model.DataContext;
+import com.wang17.religiouscalendar.model.Setting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +30,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
     private ViewPagerAdapter vpAdapter;
     private List<View> views;
     //引导图片资源
-    private static final int[] pics = {R.mipmap.guide001, R.mipmap.guide002, R.mipmap.guide003};
+    private static List<Integer> pics;
     public static String btnText = "进入软件";
 
     //底部小店图片
@@ -35,7 +38,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
 
     //记录当前选中位置
     private int currentIndex;
-    private TextView textView_close ;
+    private TextView textView_close;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
             setContentView(R.layout.activity_guide);
 
             views = new ArrayList<View>();
-            textView_close = (TextView)findViewById(R.id.textView_close);
+            textView_close = (TextView) findViewById(R.id.textView_close);
             textView_close.setText(btnText);
             textView_close.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -61,11 +64,21 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
             LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
 
+             pics = getIntent().getIntegerArrayListExtra("pics");
+            if(pics==null){
+                pics = new ArrayList<>();
+                pics.add(R.mipmap.guide001);
+                pics.add(R.mipmap.guide002);
+                pics.add(R.mipmap.guide003);
+                pics.add(R.mipmap.guide004);
+                pics.add(R.mipmap.guide005);
+            }
+
             //初始化引导图片列表
-            for (int i = 0; i < pics.length; i++) {
+            for (int i = 0; i < pics.size(); i++) {
                 ImageView iv = new ImageView(this);
                 iv.setLayoutParams(mParams);
-                iv.setImageResource(pics[i]);
+                iv.setImageResource(pics.get(i));
                 views.add(iv);
             }
             vp = (ViewPager) findViewById(R.id.viewPage_content);
@@ -80,17 +93,19 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
 
 
         } catch (Exception ex) {
-            _Helper.printExceptionSycn(this,uiHandler,ex);
+            _Helper.printExceptionSycn(this, uiHandler, ex);
         }
     }
-private Handler uiHandler = new Handler();
+
+    private Handler uiHandler = new Handler();
+
     private void initDots() {
         LinearLayout layout_dots = (LinearLayout) findViewById(R.id.layout_dots);
 
-        dots = new ImageView[pics.length];
+        dots = new ImageView[pics.size()];
 
         //循环取得小点图片
-        for (int i = 0; i < pics.length; i++) {
+        for (int i = 0; i < pics.size(); i++) {
             View view = getLayoutInflater().inflate(R.layout.inflate_dot, null);
             dots[i] = (ImageView) view.findViewById(R.id.imageView_dot);
             dots[i].setEnabled(true);//都设为灰色
@@ -107,7 +122,7 @@ private Handler uiHandler = new Handler();
      * 设置当前的引导页
      */
     private void setCurView(int position) {
-        if (position < 0 || position >= pics.length) {
+        if (position < 0 || position >= pics.size()) {
             return;
         }
 
@@ -118,7 +133,7 @@ private Handler uiHandler = new Handler();
      * 这只当前引导小点的选中
      */
     private void setCurDot(int positon) {
-        if (positon < 0 || positon > pics.length - 1 || currentIndex == positon) {
+        if (positon < 0 || positon > pics.size() - 1 || currentIndex == positon) {
             return;
         }
 
@@ -127,9 +142,9 @@ private Handler uiHandler = new Handler();
 
         currentIndex = positon;
 
-        if(positon==pics.length-1){
+        if (positon == pics.size() - 1) {
             textView_close.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             textView_close.setVisibility(View.GONE);
         }
     }

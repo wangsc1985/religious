@@ -64,9 +64,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -146,14 +148,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
             DataContext context = new DataContext(this);
-            int softVersion = 13;
-            int currentVersionCode = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode;
-            int latestVersionCode = Integer.parseInt(context.getSetting(Setting.KEYS.latestVersionCode, 0).getValue());
-            if (softVersion > latestVersionCode) {
-                GuideActivity.btnText = "立即体验";
-                startActivity(new Intent(this, GuideActivity.class));
-                context.editSetting(Setting.KEYS.latestVersionCode, softVersion);
+
+
+            ArrayList<Integer> pics = new ArrayList<>();
+            /**
+             * version 13  guide001,guide002,guide003;
+             * version 25 guide004,guide005;
+             */
+            int prevVersionNumber = context.getSetting(Setting.KEYS.latestVersionCode, 0).getInt();
+            if(prevVersionNumber<13){
+                pics.add(R.mipmap.guide001);
+                pics.add(R.mipmap.guide002);
+                pics.add(R.mipmap.guide003);
             }
+            if(prevVersionNumber<25){
+                pics.add(R.mipmap.guide004);
+                pics.add(R.mipmap.guide005);
+            }
+
+            if(pics.size()>0){
+                GuideActivity.btnText = "立即体验";
+                Intent intent = new Intent(this, GuideActivity.class);
+                intent.putIntegerArrayListExtra("pics",pics);
+                startActivity(intent);
+                context.editSetting(Setting.KEYS.latestVersionCode, this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode);
+            }
+
+
+
+
+
+
+
+
+//
+//
+//            int softVersion = 13;
+//            int currentVersionCode = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode;
+//            int latestVersionCode = Integer.parseInt(context.getSetting(Setting.KEYS.latestVersionCode, 0).getValue());
+//            if (softVersion > latestVersionCode) {
+//                GuideActivity.btnText = "立即体验";
+//                startActivity(new Intent(this, GuideActivity.class));
+//                context.editSetting(Setting.KEYS.latestVersionCode, softVersion);
+//            }
 
 
             MainActivityPermissionsDispatcher.showUMAnalyticsWithCheck(this);

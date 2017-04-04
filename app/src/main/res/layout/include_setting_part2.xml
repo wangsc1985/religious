@@ -126,16 +126,23 @@
                             android:id="@+id/textView9"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="14dp" />
+                            android:textSize="14dp"
+                            android:typeface="monospace"
+                            android:layout_marginLeft="5dp"/>
 
-                        <Button
-                            android:id="@+id/button_addMD"
-                            android:layout_width="70dp"
-                            android:layout_height="32dp"
-                            android:layout_gravity="bottom"
-                            android:layout_weight="1"
-                            android:background="@drawable/btn_bg"
-                            android:text="添加" />
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center_vertical">
+
+                            <Button
+                                android:id="@+id/button_addMD"
+                                android:layout_width="60dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/btn_bg"
+                                android:text="添加" />
+                        </RelativeLayout>
 
                     </LinearLayout>
 
