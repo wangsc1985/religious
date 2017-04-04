@@ -60,8 +60,8 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
     private MDlistdAdapter mdListAdapter;
     private List<HashMap<String, String>> mdListItems;
 
-    private static final String BUTTON_STATUS_TEXT_OFF = "已关闭";
-    private static final String BUTTON_STATUS_TEXT_ON = "已开启";
+//    private static final String BUTTON_STATUS_TEXT_OFF = "已关闭";
+//    private static final String BUTTON_STATUS_TEXT_ON = "已开启";
     private static final String BUTTON_WAY_TEXT_AUTO = "自动";
     private static final String BUTTON_WAY_TEXT_CUSTOM = "自定义";
     private static final String BUTTON_TARGET_TEXT = "设定行房周期";
@@ -121,12 +121,12 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             textViewVersion.setText("寿康宝鉴日历 " + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
 
             if (Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.recordIsOpened, true).getValue()) == true) {
-                btnRecordStatus.setText(BUTTON_STATUS_TEXT_ON);
+                btnRecordStatus.setBackgroundResource(R.drawable.on);
 //                layoutOpened.setVisibility(View.VISIBLE);
 
 
             } else {
-                btnRecordStatus.setText(BUTTON_STATUS_TEXT_OFF);
+                btnRecordStatus.setBackgroundResource(R.drawable.off);
 //                layoutOpened.setVisibility(View.GONE);
             }
 
@@ -148,7 +148,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             btnRecordStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (btnRecordStatus.getText().equals(BUTTON_STATUS_TEXT_OFF)) {
+                    if (dataContext.getSetting(Setting.KEYS.recordIsOpened,false).getBoolean()==false) {
                         if (dataContext.getSetting(Setting.KEYS.targetAuto).getBoolean() == true) {
                             if (dataContext.getSetting(Setting.KEYS.birthday) == null) {
                                 new AlertDialog.Builder(SettingActivity.this).setMessage("请先设定生日！").show();
@@ -160,11 +160,11 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                                 return;
                             }
                         }
-                        btnRecordStatus.setText(BUTTON_STATUS_TEXT_ON);
+                        btnRecordStatus.setBackgroundResource(R.drawable.on);
 //                        layoutOpened.setVisibility(View.VISIBLE);
                         dataContext.editSetting(Setting.KEYS.recordIsOpened, true);
                     } else {
-                        btnRecordStatus.setText(BUTTON_STATUS_TEXT_OFF);
+                        btnRecordStatus.setBackgroundResource(R.drawable.off);
 //                        layoutOpened.setVisibility(View.GONE);
                         dataContext.editSetting(Setting.KEYS.recordIsOpened, false);
                     }

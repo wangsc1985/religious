@@ -426,7 +426,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     progressBarRecords.setMax((int)(target/3600000));
                     progressBarRecords.setProgress((int)(have/3600000));
 
-                    setTextForRecord(DateTime.toSpanString(have,4,3),DateTime.toSpanString(leave,4,3));
+                    if(leave>0) {
+                        setTextForRecord(DateTime.toSpanString(have, 4, 3), DateTime.toSpanString(leave, 4, 3));
+                    }else{
+                        leave*=-1;
+                        setTextForRecord(DateTime.toSpanString(have, 4, 3), "+"+DateTime.toSpanString(leave, 4, 3));
+                    }
 
                 }else{
                     progressBarRecords.setVisibility(View.GONE);

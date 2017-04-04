@@ -29,7 +29,9 @@
         <Button
             android:id="@+id/button_recordStatus"
             style="@style/MyButtonStyle"
-            android:text="已开启" />
+            android:layout_width="51dp"
+            android:layout_height="26dp"
+            android:background="@drawable/on" />
 
     </LinearLayout>
 

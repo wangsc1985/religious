@@ -16,8 +16,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imageView"
@@ -25,35 +24,6 @@
                 android:layout_height="390dp"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/amtf" />
-
-            <TextView
-                android:id="@+id/textView_Version"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="#ffffff"
-                android:textSize="14dp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="微信：645708679"
-                android:textColor="#ffffff"
-                android:textSize="14dp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/textView11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="加微信请注明“寿康宝鉴”"
-                android:visibility="gone" />
 
         </LinearLayout>
 
