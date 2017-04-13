@@ -19,9 +19,11 @@ public class Setting {
     public void setKey(String key) {
         this.key = key;
     }
+
     public String getValue() {
         return value;
     }
+
     public Boolean getBoolean(){
         return Boolean.parseBoolean(value);
     }
