@@ -13,7 +13,7 @@ public class DateTime extends GregorianCalendar {
     public DateTime() {
     }
 
-    public DateTime(long timeInMillis){
+    public DateTime(long timeInMillis) {
         this.setTimeInMillis(timeInMillis);
     }
 
@@ -183,6 +183,24 @@ public class DateTime extends GregorianCalendar {
                     return second + "秒";
                 }
         }
+        return resutl;
+    }
+
+    /**
+     * 格式：*天*小时
+     *
+     * @param timeInHours
+     * @return
+     */
+    public static String toSpanString(int timeInHours) {
+
+        String resutl = "";
+        int day = (int) (timeInHours  / 24);
+        int hour = (int) (timeInHours  % 24);
+        resutl += day > 0 ? day + "天" : "";
+        resutl += hour > 0 ? hour + "小时" : "";
+        if (day == 0 && hour == 0)
+            resutl = hour + "小时";
         return resutl;
     }
 }

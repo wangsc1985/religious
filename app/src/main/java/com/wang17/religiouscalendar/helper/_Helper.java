@@ -45,11 +45,6 @@ public class _Helper {
         return (long) (day * 24 * 60 * 60000);
     }
 
-    public static int getTargetInHours(DateTime birthday) {
-        return (int) (getTargetInMillis(birthday) / 3600000);
-    }
-
-
     public static void printException(Context context, Exception e) {
         if (e.getStackTrace().length == 0)
             return;

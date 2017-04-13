@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View include_banner;
     private GridView userCalender;
     private PopupWindow mPopWindow;
-    private LinearLayout layoutJinJi, layoutJyw, layoutYgx,layoutRecord;
+    private LinearLayout layoutJinJi, layoutJyw, layoutYgx, layoutRecord;
     private ProgressBar progressBarRecords;
     // 类变量
     private ProgressDialog progressDialog;
@@ -156,23 +156,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
              * version 25 guide004,guide005;
              */
             int prevVersionNumber = context.getSetting(Setting.KEYS.latestVersionCode, 0).getInt();
-            if(prevVersionNumber<13){
+            if (prevVersionNumber < 13) {
                 pics.add(R.mipmap.guide001);
                 pics.add(R.mipmap.guide002);
             }
-            if(prevVersionNumber<25){
+            if (prevVersionNumber < 25) {
                 pics.add(R.mipmap.guide003);
                 pics.add(R.mipmap.guide004);
             }
 
-            if(pics.size()>0){
+            if (pics.size() > 0) {
                 GuideActivity.btnText = "立即体验";
                 Intent intent = new Intent(this, GuideActivity.class);
-                intent.putIntegerArrayListExtra("pics",pics);
+                intent.putIntegerArrayListExtra("pics", pics);
                 startActivity(intent);
                 context.editSetting(Setting.KEYS.latestVersionCode, this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode);
             }
-
 
 
             MainActivityPermissionsDispatcher.showUMAnalyticsWithCheck(this);
@@ -257,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         objectAnimator.start();
     }
 
-    private void setTextForRecord(String text1,String text2){
+    private void setTextForRecord(String text1, String text2) {
         textViewChijie1.setText(text1);
         textViewChijie2.setText(text2);
     }
@@ -282,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
             //region 左侧菜单操作
-            layoutYgx = (LinearLayout)findViewById(R.id.layout_ygx);
+            layoutYgx = (LinearLayout) findViewById(R.id.layout_ygx);
             layoutYgx.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -415,13 +414,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public boolean onLongClick(View v) {
                     try {
-                        if(dataContext.getLastSexualDay()!=null) {
+                        if (dataContext.getLastSexualDay() != null) {
                             startActivityForResult(new Intent(MainActivity.this, SexualDayRecordActivity.class), TO_SEXUAL_RECORD_ACTIVITY);
-                        }else{
+                        } else {
                             new AlertDialog.Builder(MainActivity.this).setMessage("当前没有记录！").show();
                         }
                     } catch (Exception e) {
-                        _Helper.printException(MainActivity.this,e);
+                        _Helper.printException(MainActivity.this, e);
                     }
                     return true;
                 }
@@ -432,37 +431,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 layoutRecord.setVisibility(View.VISIBLE);
                 SexualDay lastSexualDay = dataContext.getLastSexualDay();
 
-                long target=0;
-                if(lastSexualDay!=null){
-                    if(dataContext.getSetting(Setting.KEYS.targetAuto,true).getBoolean()==true){
+                long target = 0;
+                if (lastSexualDay != null) {
+                    if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == true) {
                         target = _Helper.getTargetInMillis(dataContext.getSetting(Setting.KEYS.birthday).getDateTime());
-                    }else{
+                    } else {
                         target = dataContext.getSetting(Setting.KEYS.targetInMillis).getLong();
                     }
-                    long have = System.currentTimeMillis() - lastSexualDay.getDateTime().getTimeInMillis();
-                    long leave = target-have;
+                    int targetInHour = (int) (target / 3600000);
+                    int haveInHour = (int)((System.currentTimeMillis() - lastSexualDay.getDateTime().getTimeInMillis())/3600000);
+                    int leaveInHour = targetInHour - haveInHour;
                     progressBarRecords.setVisibility(View.VISIBLE);
-                    progressBarRecords.setMax((int)(target/3600000));
-                    progressBarRecords.setProgress((int)(have/3600000));
+                    progressBarRecords.setMax(targetInHour);
+                    progressBarRecords.setProgress(haveInHour);
 
-                    if(leave>0) {
-                        setTextForRecord(DateTime.toSpanString(have, 4, 3), DateTime.toSpanString(leave, 4, 3));
-                    }else{
-                        leave*=-1;
-                        setTextForRecord(DateTime.toSpanString(have, 4, 3), "+"+DateTime.toSpanString(leave, 4, 3));
+                    if (leaveInHour > 0) {
+                        setTextForRecord(DateTime.toSpanString(haveInHour), DateTime.toSpanString(leaveInHour));
+                    } else {
+                        leaveInHour *= -1;
+                        setTextForRecord(DateTime.toSpanString(haveInHour), "+" + DateTime.toSpanString(leaveInHour));
                     }
 
-                }else{
+                } else {
                     progressBarRecords.setVisibility(View.GONE);
-                    setTextForRecord("点击添加记录","");
+                    setTextForRecord("点击添加记录", "");
                 }
 
-            }else{
+            } else {
                 progressBarRecords.setVisibility(View.GONE);
                 layoutRecord.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            _Helper.printException(MainActivity.this,e);
+            _Helper.printException(MainActivity.this, e);
         }
     }
 
@@ -1388,7 +1388,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (SettingActivity.isCalenderChanged) {
                         refreshCalendarWithDialog("配置已更改，正在重新加载...");
                     }
-                    if(SettingActivity.isRecordSetChanged){
+                    if (SettingActivity.isRecordSetChanged) {
                         initRecordPart();
                     }
                     break;
@@ -1403,9 +1403,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void showAddSexualDayDialog(){
+    public void showAddSexualDayDialog() {
 
-        View view = View.inflate(MainActivity.this,R.layout.inflate_dialog_date_picker,null);
+        View view = View.inflate(MainActivity.this, R.layout.inflate_dialog_date_picker, null);
         android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(MainActivity.this).setView(view).create();
         dialog.setTitle("设定时间");
 
@@ -1417,16 +1417,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int hour = dateTime.getHour();
 
         String[] yearNumbers = new String[3];
-        for (int i = year-2; i <=year; i++) {
-            yearNumbers[i-year+2] = i + "年";
+        for (int i = year - 2; i <= year; i++) {
+            yearNumbers[i - year + 2] = i + "年";
         }
         String[] monthNumbers = new String[12];
         for (int i = 0; i < 12; i++) {
-            monthNumbers[i] = i+1 + "月";
+            monthNumbers[i] = i + 1 + "月";
         }
         String[] dayNumbers = new String[31];
         for (int i = 0; i < 31; i++) {
-            dayNumbers[i] = i+1 + "日";
+            dayNumbers[i] = i + 1 + "日";
         }
         String[] hourNumbers = new String[24];
         for (int i = 0; i < 24; i++) {
@@ -1444,7 +1444,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         npMonth.setMinValue(1);
         npMonth.setMaxValue(12);
         npMonth.setDisplayedValues(monthNumbers);
-        npMonth.setValue(month+1);
+        npMonth.setValue(month + 1);
         npMonth.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
         npDay.setMinValue(1);
         npDay.setMaxValue(31);
@@ -1487,7 +1487,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     initRecordPart();
                     dialog.dismiss();
                 } catch (Exception e) {
-                    _Helper.printException(MainActivity.this,e);
+                    _Helper.printException(MainActivity.this, e);
                 }
             }
         });
@@ -1497,7 +1497,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 try {
                     dialog.dismiss();
                 } catch (Exception e) {
-                    _Helper.printException(MainActivity.this,e);
+                    _Helper.printException(MainActivity.this, e);
                 }
             }
         });

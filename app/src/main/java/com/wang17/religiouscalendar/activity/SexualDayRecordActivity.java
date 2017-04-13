@@ -123,7 +123,7 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
 
             if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == true) {
                 if (dataContext.getSetting(Setting.KEYS.birthday) != null) {
-                    max = _Helper.getTargetInHours(new DateTime(dataContext.getSetting(Setting.KEYS.birthday).getLong()));
+                    max = (int) (_Helper.getTargetInMillis(new DateTime(dataContext.getSetting(Setting.KEYS.birthday).getLong())) / 3600000);
                 } else {
                     max = 0;
                 }
@@ -164,25 +164,26 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
     private void initSummary() {
         SexualDay lastSexualDay = dataContext.getLastSexualDay();
 
-        long target=0;
-        if(dataContext.getSetting(Setting.KEYS.targetAuto,true).getBoolean()==true){
+        long target = 0;
+        if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == true) {
             target = _Helper.getTargetInMillis(dataContext.getSetting(Setting.KEYS.birthday).getDateTime());
-        }else{
+        } else {
             target = dataContext.getSetting(Setting.KEYS.targetInMillis).getLong();
         }
+        int targetInHour = (int) (target / 3600000);
         if (max > 0 && lastSexualDay != null) {
             textViewTime1 = (TextView) findViewById(R.id.textView_time1);
             textViewTime2 = (TextView) findViewById(R.id.textView_time2);
 
-            long have = System.currentTimeMillis() - lastSexualDay.getDateTime().getTimeInMillis();
-            long leave = target - have;
-            if (leave > 0) {
-                textViewTime1.setText(DateTime.toSpanString(have, 4, 3));
-                textViewTime2.setText(DateTime.toSpanString(leave, 4, 3));
+            int haveInHour = (int) ((System.currentTimeMillis() - lastSexualDay.getDateTime().getTimeInMillis()) / 3600000);
+            int leaveInHour = targetInHour - haveInHour;
+            if (leaveInHour > 0) {
+                textViewTime1.setText(DateTime.toSpanString(haveInHour));
+                textViewTime2.setText(DateTime.toSpanString(leaveInHour));
             } else {
-                leave *= -1;
-                textViewTime1.setText(DateTime.toSpanString(have, 4, 3));
-                textViewTime2.setText("+" + DateTime.toSpanString(leave, 4, 3));
+                leaveInHour *= -1;
+                textViewTime1.setText(DateTime.toSpanString(haveInHour));
+                textViewTime2.setText("+" + DateTime.toSpanString(leaveInHour));
             }
         }
     }
