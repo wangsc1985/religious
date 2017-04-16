@@ -43,6 +43,6 @@ public class Setting {
 
     public enum KEYS{
         banner,bannerPositoin,welcome,welcome_duration,zodiac1,zodiac2,szr,lzr,gyz,latestVersionCode,
-        recordIsOpened, targetAuto,birthday, targetInMillis
+        recordIsOpened, targetAuto,birthday, targetInHour
     }
 }

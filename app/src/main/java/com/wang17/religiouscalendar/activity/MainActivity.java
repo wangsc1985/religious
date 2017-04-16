@@ -68,7 +68,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -431,14 +430,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 layoutRecord.setVisibility(View.VISIBLE);
                 SexualDay lastSexualDay = dataContext.getLastSexualDay();
 
-                long target = 0;
+                int targetInHour = 0;
                 if (lastSexualDay != null) {
                     if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == true) {
-                        target = _Helper.getTargetInMillis(dataContext.getSetting(Setting.KEYS.birthday).getDateTime());
+                        targetInHour = _Helper.getTargetInHour(dataContext.getSetting(Setting.KEYS.birthday).getDateTime());
                     } else {
-                        target = dataContext.getSetting(Setting.KEYS.targetInMillis).getLong();
+                        targetInHour = dataContext.getSetting(Setting.KEYS.targetInHour).getInt();
                     }
-                    int targetInHour = (int) (target / 3600000);
                     int haveInHour = (int)((System.currentTimeMillis() - lastSexualDay.getDateTime().getTimeInMillis())/3600000);
                     int leaveInHour = targetInHour - haveInHour;
                     progressBarRecords.setVisibility(View.VISIBLE);

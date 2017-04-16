@@ -42,7 +42,11 @@ public class _Helper {
         } else if (age >= 50 && age < 60) {
             day = 21 + (age - 50) * 0.9;
         }
-        return (long) (day * 24 * 60 * 60000);
+        return (long) ((int) (day * 24) * 60 * 60000);
+    }
+
+    public static int getTargetInHour(DateTime birthday) {
+        return (int)(getTargetInMillis(birthday) / 3600000);
     }
 
     public static void printException(Context context, Exception e) {

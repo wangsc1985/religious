@@ -40,7 +40,6 @@ import com.wang17.religiouscalendar.model.LunarDate;
 import com.wang17.religiouscalendar.model.MemorialDay;
 import com.wang17.religiouscalendar.model.Setting;
 
-import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -156,7 +155,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                                 return;
                             }
                         } else {
-                            if (dataContext.getSetting(Setting.KEYS.targetInMillis) == null) {
+                            if (dataContext.getSetting(Setting.KEYS.targetInHour) == null) {
                                 new AlertDialog.Builder(SettingActivity.this).setMessage("请先设定行房周期！").show();
                                 return;
                             }
@@ -183,7 +182,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                         btnWay.setText(BUTTON_WAY_TEXT_CUSTOM);
                         layoutBirthday.setVisibility(View.GONE);
                         dataContext.editSetting(Setting.KEYS.targetAuto, false);
-                        if (dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getBoolean() == true && dataContext.getSetting(Setting.KEYS.targetInMillis) == null) {
+                        if (dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getBoolean() == true && dataContext.getSetting(Setting.KEYS.targetInHour) == null) {
                             showTargetDialog(SettingActivity.this);
                         } else {
                             customWayDataInit();
@@ -288,10 +287,10 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 
     private void customWayDataInit() {
         try {
-            Setting settingCustom = dataContext.getSetting(Setting.KEYS.targetInMillis);
+            Setting settingCustom = dataContext.getSetting(Setting.KEYS.targetInHour);
             if (settingCustom != null) {
-                long targetInMillis = Integer.parseInt(settingCustom.getValue());
-                btnTarget.setText(DateTime.toSpanString(targetInMillis, 4, 3));
+                int targetInHour = Integer.parseInt(settingCustom.getValue());
+                btnTarget.setText(DateTime.toSpanString(targetInHour));
             } else {
                 btnTarget.setText(BUTTON_TARGET_TEXT);
             }
@@ -755,13 +754,13 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(context).setView(view).create();
             dialog.setTitle("自定义间隔");
 
-            long target = 5 * 24 * 3600000;
-            Setting setting = dataContext.getSetting(Setting.KEYS.targetInMillis);
+            int targetInHour = 5 * 24 ;
+            Setting setting = dataContext.getSetting(Setting.KEYS.targetInHour);
             if (setting != null) {
-                target = setting.getLong();
+                targetInHour = setting.getInt();
             }
-            int aaa = (int) (target / 3600000 / 24);
-            int bbb = (int) (target % (3600000 * 24) / 3600000);
+            int aaa = (int) (targetInHour / 24);
+            int bbb = (int) (targetInHour %  24);
             String[] dayNumbers = new String[99];
             for (int i = 0; i < 99; i++) {
                 dayNumbers[i] = i + 2 + "天";
@@ -793,9 +792,8 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                     try {
                         int days = npDays.getValue();
                         int hours = npHours.getValue();
-                        long target = (days * 24 + hours) * 60 * 60000;
-                        dataContext.editSetting(Setting.KEYS.targetInMillis, target);
-                        btnTarget.setText(DateTime.toSpanString(target, 4, 3));
+                        long target = days * 24 + hours;
+                        dataContext.editSetting(Setting.KEYS.targetInHour, target);
                         isRecordSetChanged = true;
                         customWayDataInit();
                         dialog.dismiss();
@@ -811,7 +809,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                         dialog.dismiss();
                         if (dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getBoolean() == true
                                 && dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == false
-                                && dataContext.getSetting(Setting.KEYS.targetInMillis) == null) {
+                                && dataContext.getSetting(Setting.KEYS.targetInHour) == null) {
                             dataContext.editSetting(Setting.KEYS.recordIsOpened, false);
                             btnRecordStatus.setBackgroundResource(R.drawable.off);
                         }

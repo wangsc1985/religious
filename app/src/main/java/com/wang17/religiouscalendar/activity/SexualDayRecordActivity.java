@@ -24,14 +24,10 @@ import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.fragment.ActionBarFragment;
 import com.wang17.religiouscalendar.model.DataContext;
 import com.wang17.religiouscalendar.helper._Helper;
-import com.wang17.religiouscalendar.helper._String;
 import com.wang17.religiouscalendar.model.DateTime;
 import com.wang17.religiouscalendar.model.Setting;
 import com.wang17.religiouscalendar.model.SexualDay;
 
-import org.w3c.dom.Text;
-
-import java.io.DataOutput;
 import java.util.Calendar;
 import java.util.List;
 
@@ -128,9 +124,9 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
                     max = 0;
                 }
             } else {
-                Setting setting2 = dataContext.getSetting(Setting.KEYS.targetInMillis);
+                Setting setting2 = dataContext.getSetting(Setting.KEYS.targetInHour);
                 if (setting2 != null) {
-                    max = (int) (setting2.getLong() / 3600000);
+                    max = setting2.getInt();
                 } else {
                     max = 0;
                 }
@@ -164,13 +160,12 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
     private void initSummary() {
         SexualDay lastSexualDay = dataContext.getLastSexualDay();
 
-        long target = 0;
+        int targetInHour= 0;
         if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == true) {
-            target = _Helper.getTargetInMillis(dataContext.getSetting(Setting.KEYS.birthday).getDateTime());
+            targetInHour = _Helper.getTargetInHour(dataContext.getSetting(Setting.KEYS.birthday).getDateTime());
         } else {
-            target = dataContext.getSetting(Setting.KEYS.targetInMillis).getLong();
+            targetInHour = dataContext.getSetting(Setting.KEYS.targetInHour).getInt();
         }
-        int targetInHour = (int) (target / 3600000);
         if (max > 0 && lastSexualDay != null) {
             textViewTime1 = (TextView) findViewById(R.id.textView_time1);
             textViewTime2 = (TextView) findViewById(R.id.textView_time2);
