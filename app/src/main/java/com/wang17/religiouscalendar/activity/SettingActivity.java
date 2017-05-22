@@ -447,12 +447,12 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Setting setting = dataContext.getSetting(Setting.KEYS.zodiac1);
                 String zodiac = spinner_zodiac1.getItemAtPosition(position).toString();
-//                if (setting != null && !setting.getValue().equals(zodiac)) {
+                if (setting != null && !setting.getValue().equals(zodiac)) {
                 dataContext.editSetting(Setting.KEYS.zodiac1, zodiac);
                 isCalenderChanged = true;
                 snackbarSaved();
 
-//                }
+                }
             }
 
             @Override
@@ -465,11 +465,11 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Setting setting = dataContext.getSetting(Setting.KEYS.zodiac2);
                 String zodiac = spinner_zodiac2.getItemAtPosition(position).toString();
-//                if (setting != null && !setting.getValue().equals(zodiac)) {
+                if (setting != null && !setting.getValue().equals(zodiac)) {
                 dataContext.editSetting(Setting.KEYS.zodiac2, zodiac);
                 isCalenderChanged = true;
                 snackbarSaved();
-//                }
+                }
             }
 
             @Override
@@ -481,10 +481,10 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                                                       @Override
                                                       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                                           Setting setting = dataContext.getSetting(Setting.KEYS.welcome, 0);
-//                                                          if (!setting.getValue().equals(position + "")) {
+                                                          if (!setting.getValue().equals(position + "")) {
                                                           dataContext.editSetting(Setting.KEYS.welcome, spinner_welcome.getSelectedItemPosition());
                                                           snackbarSaved();
-//                                                          }
+                                                          }
                                                       }
 
                                                       @Override
@@ -498,10 +498,10 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Setting setting = dataContext.getSetting(Setting.KEYS.welcome_duration, 1);
-//                if (!setting.getValue().equals(position + "")) {
+                if (!setting.getValue().equals(position + "")) {
                 dataContext.editSetting(Setting.KEYS.welcome_duration, spinner_duration.getSelectedItemPosition());
                 snackbarSaved();
-//                }
+                }
             }
 
             @Override
