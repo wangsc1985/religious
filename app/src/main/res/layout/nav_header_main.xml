@@ -25,7 +25,7 @@
                 android:layout_width="170dp"
                 android:layout_height="390dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/amtf" />
+                android:src="@mipmap/amtf" />
 
         </LinearLayout>
 
@@ -143,8 +143,7 @@
 
             <include
                 layout="@layout/include_separation"
-                layout_width="match_parent"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"></include>
 
             <LinearLayout

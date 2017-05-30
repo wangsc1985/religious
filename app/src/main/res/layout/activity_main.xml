@@ -52,12 +52,22 @@
 
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/imageView_welcome"
+        <LinearLayout
+            android:id="@+id/layout_welcome"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/bright_foreground_inverse_material_light"
-            android:scaleType="fitCenter" />
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView_welcome"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter" />
+        </LinearLayout>
     </FrameLayout>
 
     <android.support.design.widget.NavigationView

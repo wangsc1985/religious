@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View include_banner;
     private GridView userCalender;
     private PopupWindow mPopWindow;
-    private LinearLayout layoutJinJi, layoutJyw, layoutYgx, layoutRecord;
+    private LinearLayout layoutJinJi, layoutJyw, layoutYgx, layoutRecord, layoutWelcome;
     private ProgressBar progressBarRecords;
     // 类变量
     private ProgressDialog progressDialog;
@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
 
+            layoutWelcome = (LinearLayout) findViewById(R.id.layout_welcome);
             imageView_welcome = (ImageView) findViewById(R.id.imageView_welcome);
 
             int itemPosition = Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome, 0).getValue());
@@ -437,7 +438,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     } else {
                         targetInHour = dataContext.getSetting(Setting.KEYS.targetInHour).getInt();
                     }
-                    int haveInHour = (int)((System.currentTimeMillis() - lastSexualDay.getDateTime().getTimeInMillis())/3600000);
+                    int haveInHour = (int) ((System.currentTimeMillis() - lastSexualDay.getDateTime().getTimeInMillis()) / 3600000);
                     int leaveInHour = targetInHour - haveInHour;
                     progressBarRecords.setVisibility(View.VISIBLE);
                     progressBarRecords.setMax(targetInHour);
@@ -883,7 +884,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void run() {
                     userCalender.setAdapter(calendarAdapter);
                     refreshInfoLayout(selectedDate);
-                    imageView_welcome.setVisibility(View.INVISIBLE);
+                    layoutWelcome.setVisibility(View.INVISIBLE);
                     if (progressDialog != null)
                         progressDialog.dismiss();
                 }
