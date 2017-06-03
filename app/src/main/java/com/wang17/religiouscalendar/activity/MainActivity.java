@@ -151,19 +151,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
             ArrayList<Integer> pics = new ArrayList<>();
+
+            //region 升级说明及升级图板
+
             /**
              * version 13  guide001,guide002,guide003;
              * version 25 guide004,guide005;
              */
-            int prevVersionNumber = context.getSetting(Setting.KEYS.latestVersionCode, 0).getInt();
-            if (prevVersionNumber < 13) {
+
+            String upgradeText = "";
+            int latestVersionCode = context.getSetting(Setting.KEYS.latestVersionCode, 0).getInt();
+
+            if (latestVersionCode < 13) {
                 pics.add(R.mipmap.guide001);
                 pics.add(R.mipmap.guide002);
             }
-            if (prevVersionNumber < 25) {
+            if (latestVersionCode < 25) {
                 pics.add(R.mipmap.guide003);
                 pics.add(R.mipmap.guide004);
             }
+//            if(latestVersionCode<30){
+//                upgradeText+=" · 右下角添加进入下一月快捷键。\n\n" +
+//                        " · 添加启动界面图片。";
+//            }
 
             if (pics.size() > 0) {
                 GuideActivity.btnText = "立即体验";
@@ -172,6 +182,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
                 context.editSetting(Setting.KEYS.latestVersionCode, this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode);
             }
+//            if(!upgradeText.isEmpty()){
+//                new AlertDialog.Builder(this).setMessage(upgradeText).setNegativeButton("知道了",null).show();
+//            }
+            //endregion
 
 
             MainActivityPermissionsDispatcher.showUMAnalyticsWithCheck(this);
