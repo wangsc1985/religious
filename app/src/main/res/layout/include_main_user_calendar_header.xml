@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <GridView
+        android:id="@+id/userCalenderHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#f1f1f1"
+        android:numColumns="7"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"></GridView>
+
+    <ProgressBar
+        android:id="@+id/progressBar_records"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:max="249"
+        android:progress="168"
+        android:progressDrawable="@drawable/my_progressbar3" />
+</LinearLayout>

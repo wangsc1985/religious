@@ -41,10 +41,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:background="@drawable/menu_btn_bg"
-                android:padding="4dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/setting" />
+                android:background="@mipmap/settings"
+                android:scaleType="fitCenter" />
 
         </FrameLayout>
 

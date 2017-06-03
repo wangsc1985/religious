@@ -9,24 +9,6 @@
 
     <!-- 日历栏 -->
 
-    <GridView
-        android:id="@+id/userCalenderHeader"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:numColumns="7"
-        android:background="#f1f1f1"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"></GridView>
-
-    <ProgressBar
-        android:id="@+id/progressBar_records"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="bottom"
-        android:max="249"
-        android:progress="168"
-        android:progressDrawable="@drawable/my_progressbar3" />
     <!--<View-->
         <!--android:id="@+id/splite01"-->
         <!--android:layout_width="fill_parent"-->

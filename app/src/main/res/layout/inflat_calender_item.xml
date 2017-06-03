@@ -48,13 +48,13 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/calendarItem_cvIsUnReligious"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:src="@drawable/un_religious_day_160"
-        android:id="@+id/calendarItem_cvIsUnReligious"
-        android:visibility="invisible"
+        android:layout_gravity="center_horizontal"
         android:scaleType="fitCenter"
-        android:layout_gravity="center_horizontal" />
+        android:src="@mipmap/un_religious_day"
+        android:visibility="invisible" />
 
     <ImageView
         android:layout_width="match_parent"

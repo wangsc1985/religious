@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -310,6 +311,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
             //endregion
 
+
+//            FloatingActionButton buttonPrevMonth = (FloatingActionButton)findViewById(R.id.button_prev_month);
+//            buttonPrevMonth.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    int selectedDay = selectedDate.getDay();
+//                    DateTime dateTime = new DateTime();
+//                    dateTime.set(currentYear, currentMonth, selectedDay);
+//                    dateTime = dateTime.addMonths(-1);
+//                    setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+//                }
+//            });
+            FloatingActionButton buttonNextMonth= (FloatingActionButton)findViewById(R.id.button_next_month);
+            buttonNextMonth.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int selectedDay = selectedDate.getDay();
+                    DateTime dateTime = new DateTime();
+                    dateTime.set(currentYear, currentMonth, selectedDay);
+                    dateTime = dateTime.addMonths(1);
+                    setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+                }
+            });
+
+
             // TODO: 2017/3/12 为侧边栏记录文本和进度条赋值
 
             //
@@ -541,7 +567,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * 自定义日历标头适配器
      */
     protected class CalenderHeaderGridAdapter extends BaseAdapter {
-        private String[] header = {"日", "一", "二", "三", "四", "五", "六"};
+        private String[] header = {"一", "二", "三", "四", "五", "六", "日"};
 
         @Override
         public int getCount() {
@@ -845,9 +871,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // 得到填充日历控件所需要的数据
             calendarItemsMap.clear();
+            boolean tag = false;
             for (int i = 1; i <= maxDayInMonth; i++) {
                 int week = tmpCalendar.get(DateTime.WEEK_OF_MONTH);
-                int day_week = tmpCalendar.get(DateTime.DAY_OF_WEEK);
+                int day_week = tmpCalendar.get(DateTime.DAY_OF_WEEK) - 1;
+                if (day_week == 0) {
+                    day_week = 7;
+                    week--;
+                    if (week == 0) {
+                        tag = true;
+                    }
+                }
+                if (tag) {
+                    week++;
+                }
                 int key = (week - 1) * 7 + day_week - 1;
                 DateTime newCalendar = new DateTime();
                 newCalendar.setTimeInMillis(tmpCalendar.getTimeInMillis());

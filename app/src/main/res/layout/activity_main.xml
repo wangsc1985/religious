@@ -18,6 +18,31 @@
             android:layout_height="match_parent">
 
 
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/button_next_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:src="@mipmap/next"
+                app:fabSize="mini" />
+
+            <!--<android.support.design.widget.FloatingActionButton-->
+                <!--android:id="@+id/button_prev_month"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_above="@+id/button_next_month"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_alignParentRight="false"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:clickable="true"-->
+                <!--android:src="@mipmap/prev"-->
+                <!--android:visibility="gone"-->
+                <!--app:fabSize="mini" />-->
+
             <ScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
@@ -34,7 +59,11 @@
 
                     <include
                         android:id="@+id/banner"
-                        layout="@layout/include_main_banner" />
+                        layout="@layout/include_main_banner"/>
+
+                    <include
+                        android:id="@+id/calendarHeader"
+                        layout="@layout/include_main_user_calendar_header"/>
 
                     <include
                         android:id="@+id/calendar"
