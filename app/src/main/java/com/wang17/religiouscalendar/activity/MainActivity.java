@@ -337,17 +337,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
 //                }
 //            });
-            FloatingActionButton buttonNextMonth= (FloatingActionButton)findViewById(R.id.button_next_month);
-            buttonNextMonth.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int selectedDay = selectedDate.getDay();
-                    DateTime dateTime = new DateTime();
-                    dateTime.set(currentYear, currentMonth, selectedDay);
-                    dateTime = dateTime.addMonths(1);
-                    setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
-                }
-            });
+//            FloatingActionButton buttonNextMonth= (FloatingActionButton)findViewById(R.id.button_next_month);
+//            buttonNextMonth.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    int selectedDay = selectedDate.getDay();
+//                    DateTime dateTime = new DateTime();
+//                    dateTime.set(currentYear, currentMonth, selectedDay);
+//                    dateTime = dateTime.addMonths(1);
+//                    setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+//                }
+//            });
 
 
             // TODO: 2017/3/12 为侧边栏记录文本和进度条赋值

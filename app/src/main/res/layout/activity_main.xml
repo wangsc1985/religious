@@ -27,6 +27,7 @@
                 android:layout_margin="10dp"
                 android:clickable="true"
                 android:src="@mipmap/next"
+                android:visibility="gone"
                 app:fabSize="mini" />
 
             <!--<android.support.design.widget.FloatingActionButton-->

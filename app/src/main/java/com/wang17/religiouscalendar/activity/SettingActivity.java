@@ -442,16 +442,22 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                 }
             }
         });
+
         spinner_zodiac1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Setting setting = dataContext.getSetting(Setting.KEYS.zodiac1);
                 String zodiac = spinner_zodiac1.getItemAtPosition(position).toString();
-                if (setting != null && !setting.getValue().equals(zodiac)) {
-                dataContext.editSetting(Setting.KEYS.zodiac1, zodiac);
-                isCalenderChanged = true;
-                snackbarSaved();
-
+                if (setting != null) {
+                    if (!setting.getValue().equals(zodiac)) {
+                        dataContext.editSetting(Setting.KEYS.zodiac1, zodiac);
+                        isCalenderChanged = true;
+                        snackbarSaved();
+                    }
+                } else {
+                    dataContext.editSetting(Setting.KEYS.zodiac1, zodiac);
+                    isCalenderChanged = true;
+                    snackbarSaved();
                 }
             }
 
@@ -465,10 +471,16 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Setting setting = dataContext.getSetting(Setting.KEYS.zodiac2);
                 String zodiac = spinner_zodiac2.getItemAtPosition(position).toString();
-                if (setting != null && !setting.getValue().equals(zodiac)) {
-                dataContext.editSetting(Setting.KEYS.zodiac2, zodiac);
-                isCalenderChanged = true;
-                snackbarSaved();
+                if (setting != null) {
+                    if (!setting.getValue().equals(zodiac)) {
+                        dataContext.editSetting(Setting.KEYS.zodiac2, zodiac);
+                        isCalenderChanged = true;
+                        snackbarSaved();
+                    }
+                } else {
+                    dataContext.editSetting(Setting.KEYS.zodiac2, zodiac);
+                    isCalenderChanged = true;
+                    snackbarSaved();
                 }
             }
 
