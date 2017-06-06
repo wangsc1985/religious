@@ -1,0 +1,544 @@
+Index: app/src/main/res/drawable/btn_round.xml
+===================================================================
+--- app/src/main/res/drawable/btn_round.xml	(revision 1a9f16a98a648b9fe9b72590d6e89b564a01ad0a)
++++ app/src/main/res/drawable/btn_round_solid.xml	(revision )
+@@ -1,8 +1,8 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <!-- 外侧圆圈，中间透明。 -->
+ <shape xmlns:android="http://schemas.android.com/apk/res/android">
+-    <stroke android:width="1dp" android:color="#b90404"/>
+-    <!--<solid android:color="#fff"/>-->
++    <stroke android:width="1dp" android:color="@color/month_text_color"/>
++    <solid android:color="@color/month_text_color"/>
+     <corners android:radius="20dp"/>
+     <size android:width="20dp" android:height="15dp"/>
+ </shape>
+\ No newline at end of file
+Index: app/src/main/res/layout/include_main_menu.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/include_main_menu.xml	(revision 1a9f16a98a648b9fe9b72590d6e89b564a01ad0a)
++++ app/src/main/res/layout/include_main_menu.xml	(revision )
+@@ -28,13 +28,15 @@
+ 
+             <TextView
+                 android:id="@+id/textView_select_month"
+-                android:layout_width="40dp"
+-                android:layout_height="40dp"
+-                android:text="月"
+-                android:textColor="@color/month_text_color"
+-                android:textSize="20dp"
++                android:layout_width="30dp"
++                android:layout_height="30dp"
++                android:layout_gravity="center"
++                android:background="@drawable/btn_round_solid"
+                 android:gravity="center"
+-                android:layout_gravity="center" />
++                android:text="6月"
++                android:textColor="#ffffff"
++                android:textSize="14dp"
++                android:textStyle="bold" />
+         </FrameLayout>
+ 
+         <LinearLayout
+@@ -74,15 +76,16 @@
+ 
+             <TextView
+                 android:id="@+id/btnToday"
+-                android:layout_width="40dp"
+-                android:layout_height="40dp"
++                android:layout_width="30dp"
++                android:layout_height="30dp"
++                android:layout_gravity="center"
++                android:background="@drawable/btn_round_solid"
++                android:gravity="center"
+                 android:text="今"
+-                android:textColor="@color/month_text_color"
+-                android:textSize="20dp"
++                android:textColor="#ffffff"
++                android:textSize="14dp"
+                 android:textStyle="bold"
+-                android:gravity="center"
+-                android:visibility="invisible"
+-                android:layout_gravity="center" />
++                android:visibility="invisible" />
+ 
+             <!--<LinearLayout-->
+                 <!--android:orientation="horizontal"-->
+\ No newline at end of file
+Index: app/src/main/java/com/wang17/religiouscalendar/activity/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/wang17/religiouscalendar/activity/MainActivity.java	(revision 1a9f16a98a648b9fe9b72590d6e89b564a01ad0a)
++++ app/src/main/java/com/wang17/religiouscalendar/activity/MainActivity.java	(revision )
+@@ -32,6 +32,7 @@
+ import android.view.ViewGroup;
+ import android.widget.AdapterView;
+ import android.widget.BaseAdapter;
++import android.widget.Button;
+ import android.widget.GridView;
+ import android.widget.ImageButton;
+ import android.widget.ImageView;
+@@ -84,7 +85,7 @@
+ public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, View.OnTouchListener {
+ 
+     // 视图变量
+-    private TextView textView_ganzhi, textView_nongli, textView_fo, button_today, textViewChijie1, textViewChijie2;
++    private TextView textView_ganzhi, textView_nongli, textView_fo, button_today,buttonMonth, textViewChijie1, textViewChijie2;
+     private CalenderGridAdapter calendarAdapter;
+     private ImageButton imageButton_leftMenu, imageButton_settting;
+     private ImageView imageView_banner, imageView_welcome;
+@@ -326,30 +327,6 @@
+             //endregion
+ 
+ 
+-//            FloatingActionButton buttonPrevMonth = (FloatingActionButton)findViewById(R.id.button_prev_month);
+-//            buttonPrevMonth.setOnClickListener(new View.OnClickListener() {
+-//                @Override
+-//                public void onClick(View v) {
+-//                    int selectedDay = selectedDate.getDay();
+-//                    DateTime dateTime = new DateTime();
+-//                    dateTime.set(currentYear, currentMonth, selectedDay);
+-//                    dateTime = dateTime.addMonths(-1);
+-//                    setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+-//                }
+-//            });
+-            FloatingActionButton buttonNextMonth= (FloatingActionButton)findViewById(R.id.button_next_month);
+-            buttonNextMonth.setOnClickListener(new View.OnClickListener() {
+-                @Override
+-                public void onClick(View v) {
+-                    int selectedDay = selectedDate.getDay();
+-                    DateTime dateTime = new DateTime();
+-                    dateTime.set(currentYear, currentMonth, selectedDay);
+-                    dateTime = dateTime.addMonths(1);
+-                    setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+-                }
+-            });
+-
+-
+             // TODO: 2017/3/12 为侧边栏记录文本和进度条赋值
+ 
+             //
+@@ -399,16 +376,37 @@
+ 
+             // button_today
+             button_today = (TextView) findViewById(R.id.btnToday);
+-            button_today.setTypeface(fontGF);
++//            button_today.setTypeface(fontGF);
+             button_today.setOnClickListener(btnToday_OnClickListener);
+ 
+             // 信息栏
+ //            yearMonth = (TextView) findViewById(R.id.tvYearMonth);
+ //            yangliBig = (TextView) findViewById(R.id.tvYangLiBig);
+-            TextView selectMonth = (TextView) findViewById(R.id.textView_select_month);
+-            selectMonth.setTypeface(fontGF);
+-            selectMonth.setOnClickListener(btnCurrentMonth_OnClickListener);
++            buttonMonth = (TextView) findViewById(R.id.textView_select_month);
++//            selectMonth.setTypeface(fontGF);
++            buttonMonth.setText(currentMonth+1+"月");
++            buttonMonth.setOnClickListener(btnCurrentMonth_OnClickListener);
+ 
++
++            final Button buttonQuickMonth = (Button) findViewById(R.id.button_quick_month);
++            buttonQuickMonth.setText(currentMonth + 1 + "月");
++            buttonQuickMonth.setOnClickListener(new View.OnClickListener() {
++                @Override
++                public void onClick(View v) {
++                    int selectedDay = selectedDate.getDay();
++                    DateTime dateTime = new DateTime(currentYear, currentMonth, selectedDay);
++//                    if (currentMonth == new DateTime().getMonth()) {
++                    dateTime = dateTime.addMonths(1);
++                    setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
++                    buttonQuickMonth.setText(currentMonth + 1 + "月");
++//                    }else{
++//                        dateTime = dateTime.addMonths(-1);
++//                        setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
++//                        buttonQuickMonth.setText(currentMonth+1+"月");
++//                    }
++                }
++            });
++
+             textView_nongli = (TextView) findViewById(R.id.textView_selected_day);
+             textView_ganzhi = (TextView) findViewById(R.id.tvGanZhi);
+             layout_religious = (LinearLayout) findViewById(R.id.linearReligious);
+@@ -1168,6 +1166,7 @@
+             if (monthHasChanged) {
+                 currentYear = year;
+                 currentMonth = month;
++                buttonMonth.setText(currentMonth+1+"月");
+                 refreshCalendarWithDialog(_String.concat("正在加载", currentYear, "年", currentMonth + 1, "月份", "戒期信息。"));
+             }
+ 
+@@ -1178,6 +1177,7 @@
+             } else {
+                 setTodayEnable(true);
+             }
++
+ 
+             //
+             refreshInfoLayout(selectedDate);
+Index: app/src/main/res/layout/include_setting_part2.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/include_setting_part2.xml	(revision 1a9f16a98a648b9fe9b72590d6e89b564a01ad0a)
++++ app/src/main/res/layout/include_setting_part2.xml	(revision )
+@@ -57,6 +57,29 @@
+                     android:orientation="vertical">
+ 
+                     <TextView
++                        android:id="@+id/textView4"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="5dp"
++                        android:text="诞忌"
++                        android:textSize="14dp"
++                        android:typeface="monospace" />
++
++                    <Spinner
++                        android:id="@+id/spinner_mdtype"
++                        android:layout_width="50dp"
++                        android:layout_height="wrap_content"
++                        android:layout_marginTop="3dp"
++                        android:background="@drawable/spinner_background" />
++                </LinearLayout>
++
++                <LinearLayout
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_marginLeft="5dp"
++                    android:orientation="vertical">
++
++                    <TextView
+                         android:id="@+id/textView6"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+@@ -93,28 +116,6 @@
+                     android:layout_height="wrap_content"
+                     android:layout_marginLeft="5dp"
+                     android:orientation="horizontal">
+-
+-                    <LinearLayout
+-                        android:layout_width="wrap_content"
+-                        android:layout_height="wrap_content"
+-                        android:orientation="vertical">
+-
+-                        <TextView
+-                            android:id="@+id/textView4"
+-                            android:layout_width="wrap_content"
+-                            android:layout_height="wrap_content"
+-                            android:layout_marginLeft="5dp"
+-                            android:text="诞忌"
+-                            android:textSize="14dp"
+-                            android:typeface="monospace" />
+-
+-                        <Spinner
+-                            android:id="@+id/spinner_mdtype"
+-                            android:layout_width="50dp"
+-                            android:layout_height="wrap_content"
+-                            android:layout_marginTop="3dp"
+-                            android:background="@drawable/spinner_background" />
+-                    </LinearLayout>
+ 
+                     <LinearLayout
+                         android:layout_width="wrap_content"
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_guide.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_guide.xml	(revision 1a9f16a98a648b9fe9b72590d6e89b564a01ad0a)
++++ app/src/main/res/layout/activity_guide.xml	(revision )
+@@ -26,7 +26,7 @@
+         android:layout_gravity="bottom|center_horizontal"
+         android:gravity="center"
+         android:layout_marginBottom="40dp"
+-        android:background="@drawable/btn_round"
++        android:background="@drawable/btn_round_stroke"
+         android:visibility="gone"
+         android:textStyle="bold" />
+ 
+\ No newline at end of file
+Index: app/src/main/res/drawable/btn_round_stroke.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/btn_round_stroke.xml	(revision )
++++ app/src/main/res/drawable/btn_round_stroke.xml	(revision )
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- 外侧圆圈，中间透明。 -->
++<shape xmlns:android="http://schemas.android.com/apk/res/android">
++    <stroke android:width="1dp" android:color="#b90404"/>
++    <!--<solid android:color="#fff"/>-->
++    <corners android:radius="20dp"/>
++    <size android:width="20dp" android:height="15dp"/>
++</shape>
+\ No newline at end of file
+Index: app/src/main/java/com/wang17/religiouscalendar/activity/SettingActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/wang17/religiouscalendar/activity/SettingActivity.java	(revision 1a9f16a98a648b9fe9b72590d6e89b564a01ad0a)
++++ app/src/main/java/com/wang17/religiouscalendar/activity/SettingActivity.java	(revision )
+@@ -447,13 +447,18 @@
+             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                 Setting setting = dataContext.getSetting(Setting.KEYS.zodiac1);
+                 String zodiac = spinner_zodiac1.getItemAtPosition(position).toString();
+-                if (setting != null && !setting.getValue().equals(zodiac)) {
++                if (setting != null) {
++                    if (!setting.getValue().equals(zodiac)) {
+-                dataContext.editSetting(Setting.KEYS.zodiac1, zodiac);
+-                isCalenderChanged = true;
+-                snackbarSaved();
++                        dataContext.editSetting(Setting.KEYS.zodiac1, zodiac);
++                        isCalenderChanged = true;
++                        snackbarSaved();
+-
+-                }
++                    }
++                } else {
++                    dataContext.editSetting(Setting.KEYS.zodiac1, zodiac);
++                    isCalenderChanged = true;
++                    snackbarSaved();
+-            }
++                }
++            }
+ 
+             @Override
+             public void onNothingSelected(AdapterView<?> parent) {
+@@ -465,10 +470,16 @@
+             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                 Setting setting = dataContext.getSetting(Setting.KEYS.zodiac2);
+                 String zodiac = spinner_zodiac2.getItemAtPosition(position).toString();
+-                if (setting != null && !setting.getValue().equals(zodiac)) {
++                if (setting != null) {
++                    if (!setting.getValue().equals(zodiac)) {
++                        dataContext.editSetting(Setting.KEYS.zodiac2, zodiac);
++                        isCalenderChanged = true;
++                        snackbarSaved();
++                    }
++                } else {
+-                dataContext.editSetting(Setting.KEYS.zodiac2, zodiac);
+-                isCalenderChanged = true;
+-                snackbarSaved();
++                    dataContext.editSetting(Setting.KEYS.zodiac2, zodiac);
++                    isCalenderChanged = true;
++                    snackbarSaved();
+                 }
+             }
+ 
+@@ -482,8 +493,8 @@
+                                                       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                           Setting setting = dataContext.getSetting(Setting.KEYS.welcome, 0);
+                                                           if (!setting.getValue().equals(position + "")) {
+-                                                          dataContext.editSetting(Setting.KEYS.welcome, spinner_welcome.getSelectedItemPosition());
+-                                                          snackbarSaved();
++                                                              dataContext.editSetting(Setting.KEYS.welcome, spinner_welcome.getSelectedItemPosition());
++                                                              snackbarSaved();
+                                                           }
+                                                       }
+ 
+@@ -499,8 +510,8 @@
+             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                 Setting setting = dataContext.getSetting(Setting.KEYS.welcome_duration, 1);
+                 if (!setting.getValue().equals(position + "")) {
+-                dataContext.editSetting(Setting.KEYS.welcome_duration, spinner_duration.getSelectedItemPosition());
+-                snackbarSaved();
++                    dataContext.editSetting(Setting.KEYS.welcome_duration, spinner_duration.getSelectedItemPosition());
++                    snackbarSaved();
+                 }
+             }
+ 
+@@ -754,13 +765,13 @@
+             android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(context).setView(view).create();
+             dialog.setTitle("自定义间隔");
+ 
+-            int targetInHour = 5 * 24 ;
++            int targetInHour = 5 * 24;
+             Setting setting = dataContext.getSetting(Setting.KEYS.targetInHour);
+             if (setting != null) {
+                 targetInHour = setting.getInt();
+             }
+             int aaa = (int) (targetInHour / 24);
+-            int bbb = (int) (targetInHour %  24);
++            int bbb = (int) (targetInHour % 24);
+             String[] dayNumbers = new String[99];
+             for (int i = 0; i < 99; i++) {
+                 dayNumbers[i] = i + 2 + "天";
+Index: app/src/main/res/layout/include_setting_part7.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/include_setting_part7.xml	(revision 1a9f16a98a648b9fe9b72590d6e89b564a01ad0a)
++++ app/src/main/res/layout/include_setting_part7.xml	(revision )
+@@ -18,7 +18,7 @@
+         android:layout_width="100dp"
+         android:layout_height="25dp"
+         android:layout_gravity="center"
+-        android:background="@drawable/btn_round"
++        android:background="@drawable/btn_round_stroke"
+         android:gravity="center"
+         android:text="软件使用帮助"
+         android:textAppearance="?android:attr/textAppearanceLarge"
+@@ -31,7 +31,7 @@
+         android:layout_width="150dp"
+         android:layout_height="25dp"
+         android:layout_gravity="center"
+-        android:background="@drawable/btn_round"
++        android:background="@drawable/btn_round_stroke"
+         android:gravity="center"
+         android:text="有新版本，点击升级"
+         android:textAppearance="?android:attr/textAppearanceLarge"
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_setting.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_setting.xml	(revision 1a9f16a98a648b9fe9b72590d6e89b564a01ad0a)
++++ app/src/main/res/layout/activity_setting.xml	(revision )
+@@ -8,26 +8,26 @@
+     tools:context="com.wang17.religiouscalendar.activity.SettingActivity">
+ 
+     <RelativeLayout
++        android:id="@+id/layout_setting_root"
+         android:layout_width="match_parent"
+-        android:layout_height="match_parent"
+-        android:id="@+id/layout_setting_root">
++        android:layout_height="match_parent">
+ 
+         <fragment
++            android:id="@+id/fragment_action"
++            android:name="com.wang17.religiouscalendar.fragment.ActionBarFragment"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+-            android:name="com.wang17.religiouscalendar.fragment.ActionBarFragment"
+-            android:id="@+id/fragment_action"
+             tools:layout="@layout/fragment_action_bar" />
+ 
+         <ScrollView
+             android:id="@+id/scrollView3"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"
+-            android:background="#ffffff"
+-            android:fillViewport="false"
+-            android:layout_below="@+id/fragment_action"
+             android:layout_alignParentLeft="true"
+-            android:layout_alignParentStart="true">
++            android:layout_alignParentStart="true"
++            android:layout_below="@+id/fragment_action"
++            android:background="#ffffff"
++            android:fillViewport="false">
+ 
+             <LinearLayout
+                 android:layout_width="match_parent"
+@@ -35,28 +35,31 @@
+                 android:layout_alignParentBottom="false"
+                 android:background="#ffffff"
+                 android:orientation="vertical"
++                android:paddingBottom="20dp"
+                 android:paddingLeft="10dp"
+-                android:paddingTop="10dp"
+                 android:paddingRight="10dp"
+-                android:paddingBottom="20dp">
++                android:paddingTop="10dp">
+ 
+                 <include layout="@layout/include_setting_part1" />
+ 
+                 <!-- 分割线 -->
+-                <include layout="@layout/include_separation0"/>
++                <include layout="@layout/include_separation0" />
++
+                 <include layout="@layout/include_setting_part2" />
+ 
+                 <!-- 分割线 -->
+-                <include layout="@layout/include_separation0"/>
++                <include layout="@layout/include_separation0" />
+ 
+                 <include layout="@layout/include_setting_part3" />
+ 
+                 <!-- 分割线 -->
+-                <include layout="@layout/include_separation0"/>
++                <include layout="@layout/include_separation0" />
++
+                 <include layout="@layout/include_setting_part4" />
+ 
+                 <!-- 分割线 -->
+-                <include layout="@layout/include_separation0"/>
++                <include layout="@layout/include_separation0" />
++
+                 <include layout="@layout/include_setting_part5" />
+ 
+                 <!-- 分割线 -->
+@@ -64,10 +67,13 @@
+                 <!--<include layout="@layout/include_setting_part6" />-->
+ 
+                 <!-- 分割线 -->
+-                <include layout="@layout/include_separation0"/>
++                <include layout="@layout/include_separation0" />
++
+-                <include layout="@layout/include_separation0"/>
++                <include layout="@layout/include_separation0" />
++
+-                <include layout="@layout/include_separation0"/>
++                <include layout="@layout/include_separation0" />
++
+-                <include layout="@layout/include_setting_part7"/>
++                <include layout="@layout/include_setting_part7" />
+             </LinearLayout>
+         </ScrollView>
+ 
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_main.xml	(revision 1a9f16a98a648b9fe9b72590d6e89b564a01ad0a)
++++ app/src/main/res/layout/activity_main.xml	(revision )
+@@ -18,17 +18,6 @@
+             android:layout_height="match_parent">
+ 
+ 
+-            <android.support.design.widget.FloatingActionButton
+-                android:id="@+id/button_next_month"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_alignParentBottom="true"
+-                android:layout_alignParentRight="true"
+-                android:layout_margin="10dp"
+-                android:clickable="true"
+-                android:src="@mipmap/next"
+-                app:fabSize="mini" />
+-
+             <!--<android.support.design.widget.FloatingActionButton-->
+                 <!--android:id="@+id/button_prev_month"-->
+                 <!--android:layout_width="wrap_content"-->
+@@ -42,6 +31,18 @@
+                 <!--android:src="@mipmap/prev"-->
+                 <!--android:visibility="gone"-->
+                 <!--app:fabSize="mini" />-->
++
++            <Button
++                android:id="@+id/button_quick_month"
++                android:layout_width="30dp"
++                android:layout_height="30dp"
++                android:layout_alignParentBottom="true"
++                android:layout_alignParentRight="true"
++                android:layout_margin="10dp"
++                android:background="@drawable/btn_round_solid"
++                android:textColor="#ffffff"
++                android:textStyle="bold"
++                android:visibility="gone" />
+ 
+             <ScrollView
+                 android:id="@+id/scrollView"

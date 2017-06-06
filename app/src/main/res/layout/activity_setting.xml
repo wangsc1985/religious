@@ -8,26 +8,26 @@
     tools:context="com.wang17.religiouscalendar.activity.SettingActivity">
 
     <RelativeLayout
+        android:id="@+id/layout_setting_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/layout_setting_root">
+        android:layout_height="match_parent">
 
         <fragment
+            android:id="@+id/fragment_action"
+            android:name="com.wang17.religiouscalendar.fragment.ActionBarFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="com.wang17.religiouscalendar.fragment.ActionBarFragment"
-            android:id="@+id/fragment_action"
             tools:layout="@layout/fragment_action_bar" />
 
         <ScrollView
             android:id="@+id/scrollView3"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="#ffffff"
-            android:fillViewport="false"
-            android:layout_below="@+id/fragment_action"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/fragment_action"
+            android:background="#ffffff"
+            android:fillViewport="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -35,28 +35,31 @@
                 android:layout_alignParentBottom="false"
                 android:background="#ffffff"
                 android:orientation="vertical"
+                android:paddingBottom="20dp"
                 android:paddingLeft="10dp"
-                android:paddingTop="10dp"
                 android:paddingRight="10dp"
-                android:paddingBottom="20dp">
+                android:paddingTop="10dp">
 
                 <include layout="@layout/include_setting_part1" />
 
                 <!-- 分割线 -->
-                <include layout="@layout/include_separation0"/>
+                <include layout="@layout/include_separation0" />
+
                 <include layout="@layout/include_setting_part2" />
 
                 <!-- 分割线 -->
-                <include layout="@layout/include_separation0"/>
+                <include layout="@layout/include_separation0" />
 
                 <include layout="@layout/include_setting_part3" />
 
                 <!-- 分割线 -->
-                <include layout="@layout/include_separation0"/>
+                <include layout="@layout/include_separation0" />
+
                 <include layout="@layout/include_setting_part4" />
 
                 <!-- 分割线 -->
-                <include layout="@layout/include_separation0"/>
+                <include layout="@layout/include_separation0" />
+
                 <include layout="@layout/include_setting_part5" />
 
                 <!-- 分割线 -->
@@ -64,10 +67,13 @@
                 <!--<include layout="@layout/include_setting_part6" />-->
 
                 <!-- 分割线 -->
-                <include layout="@layout/include_separation0"/>
-                <include layout="@layout/include_separation0"/>
-                <include layout="@layout/include_separation0"/>
-                <include layout="@layout/include_setting_part7"/>
+                <include layout="@layout/include_separation0" />
+
+                <include layout="@layout/include_separation0" />
+
+                <include layout="@layout/include_separation0" />
+
+                <include layout="@layout/include_setting_part7" />
             </LinearLayout>
         </ScrollView>
 

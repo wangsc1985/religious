@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -84,7 +85,7 @@ import permissions.dispatcher.RuntimePermissions;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, View.OnTouchListener {
 
     // 视图变量
-    private TextView textView_ganzhi, textView_nongli, textView_fo, button_today, textViewChijie1, textViewChijie2;
+    private TextView textView_ganzhi, textView_nongli, textView_fo, button_today,buttonMonth, textViewChijie1, textViewChijie2;
     private CalenderGridAdapter calendarAdapter;
     private ImageButton imageButton_leftMenu, imageButton_settting;
     private ImageView imageView_banner, imageView_welcome;
@@ -326,30 +327,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //endregion
 
 
-//            FloatingActionButton buttonPrevMonth = (FloatingActionButton)findViewById(R.id.button_prev_month);
-//            buttonPrevMonth.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    int selectedDay = selectedDate.getDay();
-//                    DateTime dateTime = new DateTime();
-//                    dateTime.set(currentYear, currentMonth, selectedDay);
-//                    dateTime = dateTime.addMonths(-1);
-//                    setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
-//                }
-//            });
-            FloatingActionButton buttonNextMonth= (FloatingActionButton)findViewById(R.id.button_next_month);
-            buttonNextMonth.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int selectedDay = selectedDate.getDay();
-                    DateTime dateTime = new DateTime();
-                    dateTime.set(currentYear, currentMonth, selectedDay);
-                    dateTime = dateTime.addMonths(1);
-                    setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
-                }
-            });
-
-
             // TODO: 2017/3/12 为侧边栏记录文本和进度条赋值
 
             //
@@ -399,15 +376,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // button_today
             button_today = (TextView) findViewById(R.id.btnToday);
-            button_today.setTypeface(fontGF);
+//            button_today.setTypeface(fontGF);
             button_today.setOnClickListener(btnToday_OnClickListener);
 
             // 信息栏
 //            yearMonth = (TextView) findViewById(R.id.tvYearMonth);
 //            yangliBig = (TextView) findViewById(R.id.tvYangLiBig);
-            TextView selectMonth = (TextView) findViewById(R.id.textView_select_month);
-            selectMonth.setTypeface(fontGF);
-            selectMonth.setOnClickListener(btnCurrentMonth_OnClickListener);
+            buttonMonth = (TextView) findViewById(R.id.textView_select_month);
+//            selectMonth.setTypeface(fontGF);
+            buttonMonth.setText(currentMonth+1+"月");
+            buttonMonth.setOnClickListener(btnCurrentMonth_OnClickListener);
+
+
+            final Button buttonQuickMonth = (Button) findViewById(R.id.button_quick_month);
+            buttonQuickMonth.setText(currentMonth + 1 + "月");
+            buttonQuickMonth.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int selectedDay = selectedDate.getDay();
+                    DateTime dateTime = new DateTime(currentYear, currentMonth, selectedDay);
+//                    if (currentMonth == new DateTime().getMonth()) {
+                    dateTime = dateTime.addMonths(1);
+                    setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+                    buttonQuickMonth.setText(currentMonth + 1 + "月");
+//                    }else{
+//                        dateTime = dateTime.addMonths(-1);
+//                        setSelectedDate(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+//                        buttonQuickMonth.setText(currentMonth+1+"月");
+//                    }
+                }
+            });
 
             textView_nongli = (TextView) findViewById(R.id.textView_selected_day);
             textView_ganzhi = (TextView) findViewById(R.id.tvGanZhi);
@@ -1168,6 +1166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (monthHasChanged) {
                 currentYear = year;
                 currentMonth = month;
+                buttonMonth.setText(currentMonth+1+"月");
                 refreshCalendarWithDialog(_String.concat("正在加载", currentYear, "年", currentMonth + 1, "月份", "戒期信息。"));
             }
 
@@ -1178,6 +1177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else {
                 setTodayEnable(true);
             }
+
 
             //
             refreshInfoLayout(selectedDate);

@@ -18,17 +18,6 @@
             android:layout_height="match_parent">
 
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/button_next_month"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_margin="10dp"
-                android:clickable="true"
-                android:src="@mipmap/next"
-                app:fabSize="mini" />
-
             <!--<android.support.design.widget.FloatingActionButton-->
                 <!--android:id="@+id/button_prev_month"-->
                 <!--android:layout_width="wrap_content"-->
@@ -42,6 +31,18 @@
                 <!--android:src="@mipmap/prev"-->
                 <!--android:visibility="gone"-->
                 <!--app:fabSize="mini" />-->
+
+            <Button
+                android:id="@+id/button_quick_month"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:background="@drawable/btn_round_solid"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <ScrollView
                 android:id="@+id/scrollView"

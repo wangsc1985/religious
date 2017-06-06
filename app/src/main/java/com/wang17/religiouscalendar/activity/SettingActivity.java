@@ -447,11 +447,16 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Setting setting = dataContext.getSetting(Setting.KEYS.zodiac1);
                 String zodiac = spinner_zodiac1.getItemAtPosition(position).toString();
-                if (setting != null && !setting.getValue().equals(zodiac)) {
-                dataContext.editSetting(Setting.KEYS.zodiac1, zodiac);
-                isCalenderChanged = true;
-                snackbarSaved();
-
+                if (setting != null) {
+                    if (!setting.getValue().equals(zodiac)) {
+                        dataContext.editSetting(Setting.KEYS.zodiac1, zodiac);
+                        isCalenderChanged = true;
+                        snackbarSaved();
+                    }
+                } else {
+                    dataContext.editSetting(Setting.KEYS.zodiac1, zodiac);
+                    isCalenderChanged = true;
+                    snackbarSaved();
                 }
             }
 
@@ -465,10 +470,16 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Setting setting = dataContext.getSetting(Setting.KEYS.zodiac2);
                 String zodiac = spinner_zodiac2.getItemAtPosition(position).toString();
-                if (setting != null && !setting.getValue().equals(zodiac)) {
-                dataContext.editSetting(Setting.KEYS.zodiac2, zodiac);
-                isCalenderChanged = true;
-                snackbarSaved();
+                if (setting != null) {
+                    if (!setting.getValue().equals(zodiac)) {
+                        dataContext.editSetting(Setting.KEYS.zodiac2, zodiac);
+                        isCalenderChanged = true;
+                        snackbarSaved();
+                    }
+                } else {
+                    dataContext.editSetting(Setting.KEYS.zodiac2, zodiac);
+                    isCalenderChanged = true;
+                    snackbarSaved();
                 }
             }
 
@@ -482,8 +493,8 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                                                       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                                           Setting setting = dataContext.getSetting(Setting.KEYS.welcome, 0);
                                                           if (!setting.getValue().equals(position + "")) {
-                                                          dataContext.editSetting(Setting.KEYS.welcome, spinner_welcome.getSelectedItemPosition());
-                                                          snackbarSaved();
+                                                              dataContext.editSetting(Setting.KEYS.welcome, spinner_welcome.getSelectedItemPosition());
+                                                              snackbarSaved();
                                                           }
                                                       }
 
@@ -499,8 +510,8 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Setting setting = dataContext.getSetting(Setting.KEYS.welcome_duration, 1);
                 if (!setting.getValue().equals(position + "")) {
-                dataContext.editSetting(Setting.KEYS.welcome_duration, spinner_duration.getSelectedItemPosition());
-                snackbarSaved();
+                    dataContext.editSetting(Setting.KEYS.welcome_duration, spinner_duration.getSelectedItemPosition());
+                    snackbarSaved();
                 }
             }
 
@@ -754,13 +765,13 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(context).setView(view).create();
             dialog.setTitle("自定义间隔");
 
-            int targetInHour = 5 * 24 ;
+            int targetInHour = 5 * 24;
             Setting setting = dataContext.getSetting(Setting.KEYS.targetInHour);
             if (setting != null) {
                 targetInHour = setting.getInt();
             }
             int aaa = (int) (targetInHour / 24);
-            int bbb = (int) (targetInHour %  24);
+            int bbb = (int) (targetInHour % 24);
             String[] dayNumbers = new String[99];
             for (int i = 0; i < 99; i++) {
                 dayNumbers[i] = i + 2 + "天";

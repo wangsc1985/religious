@@ -28,13 +28,15 @@
 
             <TextView
                 android:id="@+id/textView_select_month"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:text="月"
-                android:textColor="@color/month_text_color"
-                android:textSize="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_round_solid"
                 android:gravity="center"
-                android:layout_gravity="center" />
+                android:text="6月"
+                android:textColor="#ffffff"
+                android:textSize="14dp"
+                android:textStyle="bold" />
         </FrameLayout>
 
         <LinearLayout
@@ -74,15 +76,16 @@
 
             <TextView
                 android:id="@+id/btnToday"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:text="今"
-                android:textColor="@color/month_text_color"
-                android:textSize="20dp"
-                android:textStyle="bold"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_round_solid"
                 android:gravity="center"
-                android:visibility="invisible"
-                android:layout_gravity="center" />
+                android:text="今"
+                android:textColor="#ffffff"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
             <!--<LinearLayout-->
                 <!--android:orientation="horizontal"-->

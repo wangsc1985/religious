@@ -57,6 +57,29 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="诞忌"
+                        android:textSize="14dp"
+                        android:typeface="monospace" />
+
+                    <Spinner
+                        android:id="@+id/spinner_mdtype"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:background="@drawable/spinner_background" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
                         android:id="@+id/textView6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -93,28 +116,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textView4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:text="诞忌"
-                            android:textSize="14dp"
-                            android:typeface="monospace" />
-
-                        <Spinner
-                            android:id="@+id/spinner_mdtype"
-                            android:layout_width="50dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:background="@drawable/spinner_background" />
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
