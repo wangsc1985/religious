@@ -14,7 +14,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -85,7 +84,7 @@ import permissions.dispatcher.RuntimePermissions;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, View.OnTouchListener {
 
     // 视图变量
-    private TextView textView_ganzhi, textView_nongli, textView_fo, button_today,buttonMonth, textViewChijie1, textViewChijie2;
+    private TextView textView_ganzhi, textViewSelectedDay, textView_fo, button_today,buttonMonth, textViewChijie1, textViewChijie2;
     private CalenderGridAdapter calendarAdapter;
     private ImageButton imageButton_leftMenu, imageButton_settting;
     private ImageView imageView_banner, imageView_welcome;
@@ -376,15 +375,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // button_today
             button_today = (TextView) findViewById(R.id.btnToday);
-//            button_today.setTypeface(fontGF);
+            button_today.setTypeface(fontGF);
             button_today.setOnClickListener(btnToday_OnClickListener);
 
             // 信息栏
 //            yearMonth = (TextView) findViewById(R.id.tvYearMonth);
 //            yangliBig = (TextView) findViewById(R.id.tvYangLiBig);
             buttonMonth = (TextView) findViewById(R.id.textView_select_month);
-//            selectMonth.setTypeface(fontGF);
-            buttonMonth.setText(currentMonth+1+"月");
+            buttonMonth.setTypeface(fontGF);
+            setButtonMonthText();
             buttonMonth.setOnClickListener(btnCurrentMonth_OnClickListener);
 
 
@@ -407,7 +406,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
 
-            textView_nongli = (TextView) findViewById(R.id.textView_selected_day);
+            textViewSelectedDay = (TextView) findViewById(R.id.textView_selected_day);
+//            textViewSelectedDay.setTypeface(fontGF);
             textView_ganzhi = (TextView) findViewById(R.id.tvGanZhi);
             layout_religious = (LinearLayout) findViewById(R.id.linearReligious);
 
@@ -436,6 +436,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (Exception ex) {
             _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
         }
+    }
+
+    private void setButtonMonthText() {
+        buttonMonth.setText(currentMonth+1+"月");
     }
 
     private void initRecordPart() {
@@ -767,7 +771,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (calendarItem == null) return;
 //        yearMonth.setText(currentYear + "." + format(currentMonth + 1));
 //        yangliBig.setText(seletedDateTime.getDay() + "");
-            textView_nongli.setText(_String.concat(calendarItem.getYangLi().getYear(), "年", calendarItem.getYangLi().getMonth() + 1, "月", calendarItem.getYangLi().getDay(), "日"));
+            textViewSelectedDay.setText(_String.concat(calendarItem.getYangLi().getYear(), "年", calendarItem.getYangLi().getMonth() + 1, "月", calendarItem.getYangLi().getDay(), "日"));
             try {
                 GanZhi gz = new GanZhi(calendarItem.getYangLi(), this.solarTermMap);
                 textView_ganzhi.setText(_String.concat(gz.getTianGanYear(), gz.getDiZhiYear(), "年 ",
@@ -1166,7 +1170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (monthHasChanged) {
                 currentYear = year;
                 currentMonth = month;
-                buttonMonth.setText(currentMonth+1+"月");
+                setButtonMonthText();
                 refreshCalendarWithDialog(_String.concat("正在加载", currentYear, "年", currentMonth + 1, "月份", "戒期信息。"));
             }
 

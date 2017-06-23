@@ -488,21 +488,22 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 
             }
         });
-        spinner_welcome.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                      @Override
-                                                      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                          Setting setting = dataContext.getSetting(Setting.KEYS.welcome, 0);
-                                                          if (!setting.getValue().equals(position + "")) {
-                                                              dataContext.editSetting(Setting.KEYS.welcome, spinner_welcome.getSelectedItemPosition());
-                                                              snackbarSaved();
-                                                          }
-                                                      }
+        spinner_welcome.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Setting setting = dataContext.getSetting(Setting.KEYS.welcome, 0);
+                        if (!setting.getValue().equals(position + "")) {
+                            dataContext.editSetting(Setting.KEYS.welcome, spinner_welcome.getSelectedItemPosition());
+                            snackbarSaved();
+                        }
+                    }
 
-                                                      @Override
-                                                      public void onNothingSelected(AdapterView<?> parent) {
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
 
-                                                      }
-                                                  }
+                    }
+                }
 
         );
         spinner_duration.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

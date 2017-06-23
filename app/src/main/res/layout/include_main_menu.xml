@@ -5,11 +5,11 @@
     android:layout_height="wrap_content"
     android:background="@drawable/message_border">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
+        android:id="@+id/layout_menu"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/layout_menu">
+        android:orientation="horizontal">
 
         <FrameLayout
             android:layout_width="50dp"
@@ -28,43 +28,43 @@
 
             <TextView
                 android:id="@+id/textView_select_month"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center"
                 android:background="@drawable/btn_round_solid"
                 android:gravity="center"
                 android:text="6月"
                 android:textColor="#ffffff"
-                android:textSize="14dp"
+                android:textSize="16dp"
                 android:textStyle="bold" />
         </FrameLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/textView_selected_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="2016年9月16日"
-                android:id="@+id/textView_selected_day"
-                android:textSize="18dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/button_material_dark"
+                android:textSize="18dp"
                 android:textStyle="bold"
                 android:typeface="monospace" />
 
             <TextView
+                android:id="@+id/tvGanZhi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="丙申年 甲子月 丙戊日"
-                android:id="@+id/tvGanZhi"
                 android:layout_gravity="center_horizontal"
-                android:textSize="13dp"
+                android:text="丙申年 甲子月 丙戊日"
+                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/button_material_dark"
+                android:textSize="13dp"
                 android:typeface="monospace" />
         </LinearLayout>
 
@@ -76,43 +76,43 @@
 
             <TextView
                 android:id="@+id/btnToday"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center"
                 android:background="@drawable/btn_round_solid"
                 android:gravity="center"
                 android:text="今"
                 android:textColor="#ffffff"
-                android:textSize="14dp"
+                android:textSize="18dp"
                 android:textStyle="bold"
                 android:visibility="invisible" />
 
             <!--<LinearLayout-->
-                <!--android:orientation="horizontal"-->
-                <!--android:layout_width="40dp"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:id="@+id/layout_leftMenu"-->
-                <!--android:visibility="gone">-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:id="@+id/layout_leftMenu"-->
+            <!--android:visibility="gone">-->
 
-                <!--<TextView-->
-                    <!--android:layout_width="40dp"-->
-                    <!--android:layout_height="25dp"-->
-                    <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-                    <!--android:text="菜单"-->
-                    <!--android:id="@+id/textView_leftMenu"-->
-                    <!--android:textColor="@color/month_text_color"-->
-                    <!--android:textSize="13dp"-->
-                    <!--android:padding="4dp"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:gravity="center"-->
-                    <!--android:background="@drawable/btn_round" />-->
+            <!--<TextView-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="25dp"-->
+            <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+            <!--android:text="菜单"-->
+            <!--android:id="@+id/textView_leftMenu"-->
+            <!--android:textColor="@color/month_text_color"-->
+            <!--android:textSize="13dp"-->
+            <!--android:padding="4dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:gravity="center"-->
+            <!--android:background="@drawable/btn_round" />-->
             <!--</LinearLayout>-->
 
             <ImageButton
                 android:id="@+id/imageButton_leftMenu"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center"
                 android:background="@mipmap/menu"
                 android:scaleType="fitCenter"

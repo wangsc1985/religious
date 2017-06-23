@@ -38,8 +38,8 @@
 
             <ImageButton
                 android:id="@+id/imageButton_setting"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center"
                 android:background="@mipmap/settings"
                 android:scaleType="fitCenter" />
