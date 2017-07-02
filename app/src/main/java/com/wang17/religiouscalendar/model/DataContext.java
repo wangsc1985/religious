@@ -43,6 +43,7 @@ public class DataContext {
                 model.setMessage(cursor.getString(4));
                 result.add(model);
             }
+            cursor.close();
             db.close();
         } catch (Exception e) {
             _Helper.printException(context, e);
@@ -149,6 +150,7 @@ public class DataContext {
                 model.setDateTime(new DateTime(cursor.getLong(1)));
                 model.setItem(cursor.getString(2));
                 model.setSummary(cursor.getString(3));
+                cursor.close();
                 return model;
             }
             db.close();
@@ -179,6 +181,7 @@ public class DataContext {
                 model.setSummary(cursor.getString(3));
                 result.add(model);
             }
+            cursor.close();
             db.close();
         } catch (Exception e) {
             _Helper.printException(context, e);
@@ -260,6 +263,7 @@ public class DataContext {
             model.setType(MDtype.fromInt(cursor.getInt(1)));
             model.setRelation(MDrelation.fromInt(cursor.getInt(2)));
             model.setLunarDate(new LunarDate(cursor.getInt(3), cursor.getInt(4)));
+            cursor.close();
             return model;
         }
         return null;
@@ -281,6 +285,7 @@ public class DataContext {
             model.setLunarDate(new LunarDate(cursor.getInt(3), cursor.getInt(4)));
             result.add(model);
         }
+        cursor.close();
         return result;
     }
 
@@ -300,6 +305,7 @@ public class DataContext {
             model.setLunarDate(new LunarDate(cursor.getInt(3), cursor.getInt(4)));
             result.add(model);
         }
+        cursor.close();
         return result;
     }
 
@@ -322,6 +328,7 @@ public class DataContext {
         //判断游标是否为空
         while (cursor.moveToNext()) {
             Setting setting = new Setting(key.toString(), cursor.getString(1));
+            cursor.close();
             return setting;
         }
         return null;

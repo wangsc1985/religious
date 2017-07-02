@@ -771,7 +771,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (calendarItem == null) return;
 //        yearMonth.setText(currentYear + "." + format(currentMonth + 1));
 //        yangliBig.setText(seletedDateTime.getDay() + "");
-            textViewSelectedDay.setText(_String.concat(calendarItem.getYangLi().getYear(), "年", calendarItem.getYangLi().getMonth() + 1, "月", calendarItem.getYangLi().getDay(), "日"));
+            textViewSelectedDay.setText(_String.concat(calendarItem.getYangLi().getYear(), "年"));
             try {
                 GanZhi gz = new GanZhi(calendarItem.getYangLi(), this.solarTermMap);
                 textView_ganzhi.setText(_String.concat(gz.getTianGanYear(), gz.getDiZhiYear(), "年 ",

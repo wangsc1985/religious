@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -25,20 +26,20 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="本人属相"
-                    android:id="@+id/textView2"
                     android:textSize="14dp"
-                    android:layout_marginLeft="5dp"
                     android:typeface="monospace" />
 
                 <Spinner
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
                     android:id="@+id/spinner_zodiac1"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
                     android:layout_marginTop="3dp"
-                    android:background="@drawable/spinner_background" />
+                    android:background="@color/black_overlay" />
+
             </LinearLayout>
 
 
@@ -49,20 +50,19 @@
                 android:layout_marginLeft="10dp">
 
                 <TextView
+                    android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="配偶属相"
-                    android:id="@+id/textView3"
                     android:textSize="14dp"
-                    android:layout_marginLeft="5dp"
                     android:typeface="monospace" />
 
                 <Spinner
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
                     android:id="@+id/spinner_zodiac2"
+                    android:layout_width="55dp"
+                    android:layout_height="30dp"
                     android:layout_marginTop="3dp"
-                    android:background="@drawable/spinner_background" />
+                    android:background="@color/black_overlay" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

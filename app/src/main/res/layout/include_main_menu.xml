@@ -7,24 +7,14 @@
 
     <RelativeLayout
         android:id="@+id/layout_menu"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
         android:orientation="horizontal">
 
         <FrameLayout
             android:layout_width="50dp"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:text="月"
-                android:textColor="@color/month_text_color"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:visibility="invisible" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
 
             <TextView
                 android:id="@+id/textView_select_month"
@@ -35,7 +25,7 @@
                 android:gravity="center"
                 android:text="6月"
                 android:textColor="#ffffff"
-                android:textSize="16dp"
+                android:textSize="14dp"
                 android:textStyle="bold" />
         </FrameLayout>
 
@@ -49,7 +39,8 @@
                 android:id="@+id/textView_selected_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2016年9月16日"
+                android:layout_gravity="center_horizontal"
+                android:text="2016年"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/button_material_dark"
                 android:textSize="18dp"

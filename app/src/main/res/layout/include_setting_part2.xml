@@ -45,9 +45,9 @@
                     <Spinner
                         android:id="@+id/spinner_mdrelation"
                         android:layout_width="50dp"
-                        android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:background="@drawable/spinner_background" />
+                        android:layout_height="30dp"
+                        android:background="@color/black_overlay" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -68,9 +68,9 @@
                     <Spinner
                         android:id="@+id/spinner_mdtype"
                         android:layout_width="50dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
                         android:layout_marginTop="3dp"
-                        android:background="@drawable/spinner_background" />
+                        android:background="@color/black_overlay" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -96,16 +96,17 @@
                         <Spinner
                             android:id="@+id/spinner_month"
                             android:layout_width="50dp"
-                            android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
-                            android:background="@drawable/spinner_background" />
+                            android:layout_height="30dp"
+                            android:background="@color/black_overlay" />
 
                         <Spinner
                             android:id="@+id/spinner_day"
                             android:layout_width="50dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="2dp"
                             android:layout_marginTop="3dp"
-                            android:background="@drawable/spinner_background" />
+                            android:background="@color/black_overlay" />
 
                     </LinearLayout>
 
@@ -156,7 +157,7 @@
 
         <LinearLayout
             android:id="@+id/mdList"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="5dp">

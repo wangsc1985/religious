@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
-    android:gravity="left"
-    android:textColor="#000000"
-    android:textSize="14dp"
-    android:singleLine="true"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="30dp"
+    android:background="@color/common_google_signin_btn_text_light_focused"
     android:ellipsize="marquee"
-    android:padding="5dp"
-    android:background="#ffffff"
-    android:typeface="monospace"
-    android:fontFamily="monospace" />
+    android:gravity="left|center_vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:singleLine="true"
+    android:textColor="#000000"
+    android:textSize="12dp" />

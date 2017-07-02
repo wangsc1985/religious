@@ -79,9 +79,9 @@ public class ActionBarFragment extends Fragment {
 
         //
         textView_title = (TextView) containerView.findViewById(R.id.textView_title);
-        textView_title.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/GONGFANG.ttf"));
-        //
-//        ObjectAnimator objectAnimator = (ObjectAnimator) AnimatorInflater.loadAnimator(getContext(), R.animator.color_animator);
+//        textView_title.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/GONGFANG.ttf"));
+
+///        ObjectAnimator objectAnimator = (ObjectAnimator) AnimatorInflater.loadAnimator(getContext(), R.animator.color_animator);
 //        objectAnimator.setEvaluator(new ArgbEvaluator());
 //        objectAnimator.setTarget(textView_title);
 //        objectAnimator.start();
