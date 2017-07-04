@@ -22,8 +22,8 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.fragment.ActionBarFragment;
+import com.wang17.religiouscalendar.util._Utils;
 import com.wang17.religiouscalendar.model.DataContext;
-import com.wang17.religiouscalendar.helper._Helper;
 import com.wang17.religiouscalendar.model.DateTime;
 import com.wang17.religiouscalendar.model.Setting;
 import com.wang17.religiouscalendar.model.SexualDay;
@@ -119,7 +119,7 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
 
             if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == true) {
                 if (dataContext.getSetting(Setting.KEYS.birthday) != null) {
-                    max = (int) (_Helper.getTargetInMillis(new DateTime(dataContext.getSetting(Setting.KEYS.birthday).getLong())) / 3600000);
+                    max = (int) (_Utils.getTargetInMillis(new DateTime(dataContext.getSetting(Setting.KEYS.birthday).getLong())) / 3600000);
                 } else {
                     max = 0;
                 }
@@ -153,7 +153,7 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
             listView_sexualDays.setAdapter(recordListdAdapter);
 
         } catch (Exception e) {
-            _Helper.printException(this, e);
+            _Utils.printException(this, e);
         }
     }
 
@@ -162,7 +162,7 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
 
         int targetInHour= 0;
         if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == true) {
-            targetInHour = _Helper.getTargetInHour(dataContext.getSetting(Setting.KEYS.birthday).getDateTime());
+            targetInHour = _Utils.getTargetInHour(dataContext.getSetting(Setting.KEYS.birthday).getDateTime());
         } else {
             targetInHour = dataContext.getSetting(Setting.KEYS.targetInHour).getInt();
         }
@@ -253,7 +253,7 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
                                 }
                             }).show();
                         } catch (Exception e) {
-                            _Helper.printException(SexualDayRecordActivity.this, e);
+                            _Utils.printException(SexualDayRecordActivity.this, e);
                         }
                     }
                 });
@@ -270,7 +270,7 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
                     progressBar.setProgress(0);
                 }
             } catch (Exception e) {
-                _Helper.printException(SexualDayRecordActivity.this, e);
+                _Utils.printException(SexualDayRecordActivity.this, e);
             }
             return convertView;
         }
@@ -363,7 +363,7 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
                     initSummary();
                     dialog.dismiss();
                 } catch (Exception e) {
-                    _Helper.printException(SexualDayRecordActivity.this, e);
+                    _Utils.printException(SexualDayRecordActivity.this, e);
                 }
             }
         });
@@ -373,7 +373,7 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
                 try {
                     dialog.dismiss();
                 } catch (Exception e) {
-                    _Helper.printException(SexualDayRecordActivity.this, e);
+                    _Utils.printException(SexualDayRecordActivity.this, e);
                 }
             }
         });

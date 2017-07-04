@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.wang17.religiouscalendar.emnu.MDrelation;
 import com.wang17.religiouscalendar.emnu.MDtype;
-import com.wang17.religiouscalendar.helper._Helper;
+import com.wang17.religiouscalendar.util._Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class DataContext {
             cursor.close();
             db.close();
         } catch (Exception e) {
-            _Helper.printException(context, e);
+            _Utils.printException(context, e);
         }
         return result;
     }
@@ -67,7 +67,7 @@ public class DataContext {
             //关闭SQLiteDatabase对象
             db.close();
         } catch (Exception e) {
-            _Helper.printException(context, e);
+            _Utils.printException(context, e);
         }
     }
 
@@ -87,7 +87,7 @@ public class DataContext {
             db.update("runLog", values, "id=?", new String[]{runLog.getId().toString()});
             db.close();
         } catch (Exception e) {
-            _Helper.printException(context, e);
+            _Utils.printException(context, e);
         }
     }
 
@@ -99,7 +99,7 @@ public class DataContext {
             //关闭SQLiteDatabase对象
             db.close();
         } catch (Exception e) {
-            _Helper.printException(context, e);
+            _Utils.printException(context, e);
         }
     }
     //endregion
@@ -128,7 +128,7 @@ public class DataContext {
             //关闭SQLiteDatabase对象
             db.close();
         } catch (Exception e) {
-            _Helper.printException(context, e);
+            _Utils.printException(context, e);
         }
     }
 
@@ -155,7 +155,7 @@ public class DataContext {
             }
             db.close();
         } catch (Exception e) {
-            _Helper.printException(context, e);
+            _Utils.printException(context, e);
         }
         return null;
     }
@@ -184,7 +184,7 @@ public class DataContext {
             cursor.close();
             db.close();
         } catch (Exception e) {
-            _Helper.printException(context, e);
+            _Utils.printException(context, e);
         }
         return result;
     }
@@ -209,7 +209,7 @@ public class DataContext {
             db.update("sexualDay", values, "id=?", new String[]{sexualDay.getId().toString()});
             db.close();
         } catch (Exception e) {
-            _Helper.printException(context, e);
+            _Utils.printException(context, e);
         }
     }
 
@@ -226,7 +226,7 @@ public class DataContext {
             //关闭SQLiteDatabase对象
             db.close();
         } catch (Exception e) {
-            _Helper.printException(context, e);
+            _Utils.printException(context, e);
         }
     }
     //endregion

@@ -1,4 +1,4 @@
-package com.wang17.religiouscalendar.helper;
+package com.wang17.religiouscalendar.util;
 
 /**
  * Created by 阿弥陀佛 on 2015/6/19.
@@ -18,7 +18,7 @@ public class Lunar {
     private int year;
     private int month;
     private int day;
-    private boolean leap;
+    public boolean leap;
     final static String chineseNumber[] = {"一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"};
     static SimpleDateFormat chineseDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
     final static long[] lunarInfo = new long[]

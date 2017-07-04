@@ -7,13 +7,30 @@ android {
         applicationId "com.wang17.religiouscalendar"
         minSdkVersion 11
         targetSdkVersion 25
-        versionCode 30
-        versionName '4.1.0'
+        versionCode 31
+        versionName '5.0.0'
+    }
+    /**
+     * 调试时使用自动签名，手动添加。
+     */
+    signingConfigs {
+        release {
+            storeFile file('wangsc.jks')
+            storePassword 'wangsc351489'
+            keyAlias 'key'
+            keyPassword 'wangsc351489'
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        /**
+         * 调试时使用自动签名，手动添加。
+         */
+        debug {
+            signingConfig signingConfigs.release
         }
     }
     productFlavors {

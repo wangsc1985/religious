@@ -14,12 +14,13 @@
         android:paddingTop="10dp"></GridView>
 
     <ProgressBar
-        android:id="@+id/progressBar_records"
+        android:id="@+id/progressBar_loading"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="bottom"
-        android:max="249"
-        android:progress="168"
-        android:progressDrawable="@drawable/my_progressbar3" />
+        android:max="17"
+        android:progress="0"
+        android:progressDrawable="@drawable/my_progressbar3"
+        android:visibility="gone" />
 </LinearLayout>

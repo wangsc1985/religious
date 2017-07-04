@@ -3,7 +3,6 @@ package com.wang17.religiouscalendar.activity;
 import android.animation.AnimatorInflater;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,10 +15,8 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
-import com.wang17.religiouscalendar.helper.ViewPagerAdapter;
-import com.wang17.religiouscalendar.helper._Helper;
-import com.wang17.religiouscalendar.model.DataContext;
-import com.wang17.religiouscalendar.model.Setting;
+import com.wang17.religiouscalendar.util.ViewPagerAdapter;
+import com.wang17.religiouscalendar.util._Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +67,6 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
                 pics.add(R.mipmap.guide001);
                 pics.add(R.mipmap.guide002);
                 pics.add(R.mipmap.guide003);
-                pics.add(R.mipmap.guide004);
             }
 
             //初始化引导图片列表
@@ -92,7 +88,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
 
 
         } catch (Exception ex) {
-            _Helper.printExceptionSycn(this, uiHandler, ex);
+            _Utils.printExceptionSycn(this, uiHandler, ex);
         }
     }
 

@@ -4,13 +4,13 @@ import android.Manifest;
 import android.animation.AnimatorInflater;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -26,7 +26,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -44,16 +43,18 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.emnu.SolarTerm;
-import com.wang17.religiouscalendar.helper.CalendarHelper;
-import com.wang17.religiouscalendar.helper.GanZhi;
-import com.wang17.religiouscalendar.helper.Lunar;
-import com.wang17.religiouscalendar.helper.Religious;
-import com.wang17.religiouscalendar.helper._Helper;
-import com.wang17.religiouscalendar.helper._Session;
-import com.wang17.religiouscalendar.helper._String;
+import com.wang17.religiouscalendar.util.AnimationUtils;
+import com.wang17.religiouscalendar.util.CalendarHelper;
+import com.wang17.religiouscalendar.util.GanZhi;
+import com.wang17.religiouscalendar.util.Lunar;
+import com.wang17.religiouscalendar.util.Religious;
+import com.wang17.religiouscalendar.util._Utils;
+import com.wang17.religiouscalendar.util._Session;
+import com.wang17.religiouscalendar.util._String;
 import com.wang17.religiouscalendar.model.CalendarItem;
 import com.wang17.religiouscalendar.model.DataContext;
 import com.wang17.religiouscalendar.model.DateTime;
+import com.wang17.religiouscalendar.model.ReligiousCallBack;
 import com.wang17.religiouscalendar.model.Setting;
 import com.wang17.religiouscalendar.model.SexualDay;
 
@@ -81,37 +82,38 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, View.OnTouchListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     // 视图变量
-    private TextView textView_ganzhi, textViewSelectedDay, textView_fo, button_today,buttonMonth, textViewChijie1, textViewChijie2;
+    private TextView textViewGanzhi, textViewYear, textView_fo, buttonToday, buttonMonth, textViewChijie1, textViewChijie2;
     private CalenderGridAdapter calendarAdapter;
     private ImageButton imageButton_leftMenu, imageButton_settting;
-    private ImageView imageView_banner, imageView_welcome;
+    private ImageView imageView_banner, imageView_welcome, imageLeft, imageRight;
     private DrawerLayout drawer;
-    private LinearLayout layout_upper_banner, layout_religious;
-    private View include_banner;
+    private LinearLayout layout_religious;
     private GridView userCalender;
     private PopupWindow mPopWindow;
     private LinearLayout layoutJinJi, layoutJyw, layoutYgx, layoutRecord, layoutWelcome;
-    private ProgressBar progressBarRecords;
+    private ProgressBar progressBarLoading;
     // 类变量
-    private ProgressDialog progressDialog;
     private DataContext dataContext;
     private Typeface fontHWZS, fontGF;
     private DateTime selectedDate;
+    private RefreshCalendarTask refreshCalendarTask;
     // 值变量
-    private int calendarItemCount, preSelectedPosition, todayPosition, currentYear, currentMonth;
+    private int calendarItemLength, preSelectedPosition, todayPosition, currentYear, currentMonth;
     private long xxxTimeMillis;
     private boolean isFirstTime, isShowRecords;
     private Map<Integer, CalendarItem> calendarItemsMap;
     private TreeMap<DateTime, SolarTerm> solarTermMap;
     private Map<DateTime, SolarTerm> currentMonthSolarTerms;
+    private Map<DateTime, View> calendarItemViewsMap;
     private HashMap<DateTime, String> religiousDays, remarks;
     private Handler uiHandler;
-    private float locationX, locationY;
     private static final int TO_SEXUAL_RECORD_ACTIVITY = 298;
     public static final int TO_SETTING_ACTIVITY = 1;
+
+    private int welcomeDurationIndex;
 
     @Override
     protected void onPause() {
@@ -168,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             if (latestVersionCode < 25) {
                 pics.add(R.mipmap.guide003);
-                pics.add(R.mipmap.guide004);
             }
 //            if(latestVersionCode<30){
 //                upgradeText+=" · 右下角添加进入下一月快捷键。\n\n" +
@@ -203,21 +204,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
 
+            //region 启动界面
+
             layoutWelcome = (LinearLayout) findViewById(R.id.layout_welcome);
             imageView_welcome = (ImageView) findViewById(R.id.imageView_welcome);
-
-            int itemPosition = Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome, 0).getValue());
-            if (itemPosition >= _Session.welcomes.size()) {
-                itemPosition = 0;
-                dataContext.editSetting(Setting.KEYS.welcome, itemPosition + "");
+            welcomeDurationIndex = dataContext.getSetting(Setting.KEYS.welcome_duration, 1).getInt();
+            if (welcomeDurationIndex == 0) {
+                imageView_welcome.setVisibility(View.INVISIBLE);
+            } else {
+                imageView_welcome.setVisibility(View.VISIBLE);
+                int itemPosition = Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome, 0).getValue());
+                if (itemPosition >= _Session.welcomes.size()) {
+                    itemPosition = 0;
+                    dataContext.editSetting(Setting.KEYS.welcome, itemPosition + "");
+                }
+                imageView_welcome.setImageResource(_Session.welcomes.get(itemPosition).getResId());
             }
-            imageView_welcome.setImageResource(_Session.welcomes.get(itemPosition).getResId());
+
+            //endregion
+
 
             //
             solarTermMap = loadJavaSolarTerms(R.raw.solar_java_50);
 
             //
-            initializeComponent();
+            initViews();
 
 /********************************/
 //            UpdateManager manager = new UpdateManager(MainActivity.this);
@@ -225,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 /********************************/
             Log.i("wangsc", "MainActivity have loaded ... ");
         } catch (Exception ex) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
+            _Utils.printExceptionSycn(MainActivity.this, uiHandler, ex);
         }
     }
 
@@ -264,10 +275,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /**
      * 六字名号呼吸效果。
      */
-    private void nianfo() throws Exception {
+    private void nianfo(View target) throws Exception {
         ObjectAnimator objectAnimator = (ObjectAnimator) AnimatorInflater.loadAnimator(MainActivity.this, R.animator.color_animator);
         objectAnimator.setEvaluator(new ArgbEvaluator());
-        objectAnimator.setTarget(textView_fo);
+        objectAnimator.setTarget(target);
         objectAnimator.start();
     }
 
@@ -279,12 +290,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /**
      * 方法 - 初始化所有变量
      */
-    private void initializeComponent() {
+    private void initViews() {
         try {
+            calendarItemViewsMap = new HashMap<>();
+            currentMonthSolarTerms = new HashMap<>();
+            religiousDays = new HashMap<>();
+            remarks = new HashMap<>();
+            refreshCalendarTask = new RefreshCalendarTask();
 
             //region 持戒记录功能设置
-
-            progressBarRecords = (ProgressBar) findViewById(R.id.progressBar_records);
             layoutRecord = (LinearLayout) findViewById(R.id.layout_record);
             textViewChijie1 = (TextView) findViewById(R.id.textView_chijie);
             textViewChijie2 = (TextView) findViewById(R.id.textView_chijie2);
@@ -326,6 +340,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //endregion
 
 
+            imageLeft = (ImageView) findViewById(R.id.image_left);
+            imageLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DateTime now = selectedDate.addMonths(-1);
+                    DateTime dateTime = new DateTime();
+                    dateTime.set(now.getYear(), now.getMonth(), 1);
+                    int maxDayOfMonth = dateTime.getActualMaximum(Calendar.DAY_OF_MONTH);
+                    int selectedDay = MainActivity.this.selectedDate.getDay();
+                    setSelectedDate(now.getYear(), now.getMonth(), maxDayOfMonth < selectedDay ? maxDayOfMonth : selectedDay);
+                }
+            });
+
+            imageRight = (ImageView) findViewById(R.id.image_right);
+            imageRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DateTime now = selectedDate.addMonths(1);
+                    DateTime dateTime = new DateTime();
+                    dateTime.set(now.getYear(), now.getMonth(), 1);
+                    int maxDayOfMonth = dateTime.getActualMaximum(Calendar.DAY_OF_MONTH);
+                    int selectedDay = MainActivity.this.selectedDate.getDay();
+                    setSelectedDate(now.getYear(), now.getMonth(), maxDayOfMonth < selectedDay ? maxDayOfMonth : selectedDay);
+                }
+            });
+
+
+            progressBarLoading = (ProgressBar) findViewById(R.id.progressBar_loading);
+
             // TODO: 2017/3/12 为侧边栏记录文本和进度条赋值
 
             //
@@ -347,6 +390,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
 
             imageButton_leftMenu = (ImageButton) findViewById(R.id.imageButton_leftMenu);
+            AnimationUtils.setRorateAnimation(this, imageButton_leftMenu, 7000);
             imageButton_settting = (ImageButton) findViewById(R.id.imageButton_setting);
 
             imageButton_leftMenu.setOnClickListener(leftMenuClick);
@@ -365,25 +409,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             textView_fo.setTypeface(fontGF);
 //            textView_fo.getPaint().setFakeBoldText(true);
             //
-            nianfo();
+            nianfo(textView_fo);
 
             // selectedDate
             selectedDate = DateTime.getToday();
             currentYear = selectedDate.getYear();
             currentMonth = selectedDate.getMonth();
-            currentMonthSolarTerms = new HashMap<DateTime, SolarTerm>();
 
-            // button_today
-            button_today = (TextView) findViewById(R.id.btnToday);
-            button_today.setTypeface(fontGF);
-            button_today.setOnClickListener(btnToday_OnClickListener);
+            // buttonToday
+            buttonToday = (TextView) findViewById(R.id.btn_today);
+            buttonToday.setTypeface(fontGF);
+            buttonToday.setOnClickListener(btnToday_OnClickListener);
+
+//            textViewToday = (TextView) findViewById(R.id.textView_today);
+//            textViewToday.setTypeface(fontGF);
 
             // 信息栏
 //            yearMonth = (TextView) findViewById(R.id.tvYearMonth);
 //            yangliBig = (TextView) findViewById(R.id.tvYangLiBig);
-            buttonMonth = (TextView) findViewById(R.id.textView_select_month);
+            buttonMonth = (TextView) findViewById(R.id.button_month);
             buttonMonth.setTypeface(fontGF);
-            setButtonMonthText();
             buttonMonth.setOnClickListener(btnCurrentMonth_OnClickListener);
 
 
@@ -406,14 +451,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
 
-            textViewSelectedDay = (TextView) findViewById(R.id.textView_selected_day);
-//            textViewSelectedDay.setTypeface(fontGF);
-            textView_ganzhi = (TextView) findViewById(R.id.tvGanZhi);
+            textViewYear = (TextView) findViewById(R.id.textView_year);
+//            textViewYear.setTypeface(fontGF);
+            textViewGanzhi = (TextView) findViewById(R.id.tvGanZhi);
+//            textViewGanzhi.setTypeface(fontHWZS);
             layout_religious = (LinearLayout) findViewById(R.id.linearReligious);
 
             // calendarAdapter
             calendarAdapter = new CalenderGridAdapter();
             calendarItemsMap = new HashMap<Integer, CalendarItem>();
+
+            setButtonMonthText();
 
             // btnCurrentMonth
 //            btnCurrentMonth = (Button) findViewById(R.id.btnChangeMonth);
@@ -422,7 +470,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // userCalender
             userCalender = (GridView) findViewById(R.id.userCalender);
             userCalender.setOnItemClickListener(userCalender_OnItemClickListener);
-            userCalender.setOnItemSelectedListener(userCalender_OnItemSelectedListener);
             GridView calendarHeader = (GridView) findViewById(R.id.userCalenderHeader);
             calendarHeader.setAdapter(new CalenderHeaderGridAdapter()); // 添加星期标头
 
@@ -434,12 +481,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }).start();
         } catch (Exception ex) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
+            _Utils.printExceptionSycn(MainActivity.this, uiHandler, ex);
         }
     }
 
     private void setButtonMonthText() {
-        buttonMonth.setText(currentMonth+1+"月");
+        buttonMonth.setText(currentMonth + 1 + "月");
+        textViewYear.setText(_String.concat(currentYear, "年"));
+//        int month = new Lunar(selectedDate).getMonth();
+//        String monthStr = "";
+//        switch (month) {
+//            case 1:
+//                monthStr = "一";
+//                break;
+//            case 2:
+//                monthStr = "二";
+//                break;
+//            case 3:
+//                monthStr = "三";
+//                break;
+//            case 4:
+//                monthStr = "四";
+//                break;
+//            case 5:
+//                monthStr = "五";
+//                break;
+//            case 6:
+//                monthStr = "六";
+//                break;
+//            case 7:
+//                monthStr = "七";
+//                break;
+//            case 8:
+//                monthStr = "八";
+//                break;
+//            case 9:
+//                monthStr = "九";
+//                break;
+//            case 10:
+//                monthStr = "十";
+//                break;
+//            case 11:
+//                monthStr = "冬";
+//                break;
+//            case 12:
+//                monthStr = "腊";
+//                break;
+//        }
+//        buttonMonth.setText(monthStr);
     }
 
     private void initRecordPart() {
@@ -462,12 +551,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             new AlertDialog.Builder(MainActivity.this).setMessage("当前没有记录！").show();
                         }
                     } catch (Exception e) {
-                        _Helper.printException(MainActivity.this, e);
+                        _Utils.printException(MainActivity.this, e);
                     }
                     return true;
                 }
             });
 
+            if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == false) {
+                dataContext.editSetting(Setting.KEYS.recordIsOpened,false);
+                dataContext.editSetting(Setting.KEYS.targetAuto,true);
+                dataContext.deleteSetting(Setting.KEYS.targetInHour);
+//                new AlertDialog.Builder(this).setMessage("系统移除了自定义行房周期功能，请到设置界面设置出生日期，再使用此功能。").setNegativeButton("知道了", null).show();
+//                return;
+            }
             isShowRecords = Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getValue());
             if (isShowRecords) {
                 layoutRecord.setVisibility(View.VISIBLE);
@@ -475,16 +571,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 int targetInHour = 0;
                 if (lastSexualDay != null) {
-                    if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == true) {
-                        targetInHour = _Helper.getTargetInHour(dataContext.getSetting(Setting.KEYS.birthday).getDateTime());
-                    } else {
-                        targetInHour = dataContext.getSetting(Setting.KEYS.targetInHour).getInt();
-                    }
+                    targetInHour = _Utils.getTargetInHour(dataContext.getSetting(Setting.KEYS.birthday).getDateTime());
                     int haveInHour = (int) ((System.currentTimeMillis() - lastSexualDay.getDateTime().getTimeInMillis()) / 3600000);
                     int leaveInHour = targetInHour - haveInHour;
-                    progressBarRecords.setVisibility(View.VISIBLE);
-                    progressBarRecords.setMax(targetInHour);
-                    progressBarRecords.setProgress(haveInHour);
 
                     if (leaveInHour > 0) {
                         setTextForRecord(DateTime.toSpanString(haveInHour), DateTime.toSpanString(leaveInHour));
@@ -494,16 +583,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
 
                 } else {
-                    progressBarRecords.setVisibility(View.GONE);
                     setTextForRecord("点击添加记录", "");
                 }
 
             } else {
-                progressBarRecords.setVisibility(View.GONE);
                 layoutRecord.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            _Helper.printException(MainActivity.this, e);
+            _Utils.printException(MainActivity.this, e);
         }
     }
 
@@ -568,15 +655,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             mPopWindow.dismiss();
         } catch (Exception ex) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
+            _Utils.printExceptionSycn(MainActivity.this, uiHandler, ex);
         }
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        locationX = event.getX();
-        locationY = event.getY();
-        return true;
     }
 
     /**
@@ -608,7 +688,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
             mTextView.getPaint().setFakeBoldText(true);
             mTextView.setTypeface(Typeface.MONOSPACE);
-//            mTextView.setTextColor(getResources().getColor(R.color.dim_foreground_material_dark));
             mTextView.setTextColor(Color.parseColor("#000000"));
             mTextView.setWidth(60);
             return mTextView;
@@ -622,7 +701,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public int getCount() {
-            return calendarItemCount;
+            return calendarItemLength;
         }
 
         @Override
@@ -640,61 +719,72 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.inflat_calender_item, null);
             try {
                 convertView = View.inflate(MainActivity.this, R.layout.inflat_calender_item, null);
-                TextView ci_tvYangLi = (TextView) convertView.findViewById(R.id.calenderItem_tv_YangLiDay);
-                TextView ci_tvNongLi = (TextView) convertView.findViewById(R.id.calendarItem_tv_NongLiDay);
-                ImageView ci_cvIsToday = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsToday);
-                ImageView ci_cvIsSelected = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsSelected);
-                ImageView ci_cvIsUnReligious = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsUnReligious);
+                TextView textViewYangLi = (TextView) convertView.findViewById(R.id.calenderItem_tv_YangLiDay);
+                TextView textViewNongLi = (TextView) convertView.findViewById(R.id.calendarItem_tv_NongLiDay);
+                ImageView imageIsToday = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsToday);
+                ImageView imageIsSelected = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsSelected);
                 if (calendarItemsMap.containsKey(position)) {
                     CalendarItem calendarItem = calendarItemsMap.get(position);
                     DateTime today = DateTime.getToday();
-                    DateTime dafs = calendarItem.getYangLi().getDate();
-                    ci_tvYangLi.setText(calendarItem.getYangLi().get(DateTime.DAY_OF_MONTH) + "");
+                    textViewYangLi.setText(calendarItem.getYangLi().get(DateTime.DAY_OF_MONTH) + "");
+
                     // 农历月初，字体设置。
                     if (calendarItem.getNongLi().getDay() == 1) {
-                        ci_tvNongLi.setText(calendarItem.getNongLi().getMonthStr());
-                        ci_tvNongLi.setTextColor(Color.BLACK);
-                        ci_tvNongLi.getPaint().setFakeBoldText(true);
+                        if (calendarItem.getNongLi().isLeap())
+                            textViewNongLi.setText("闰" + calendarItem.getNongLi().getMonthStr());
+                        else
+                            textViewNongLi.setText(calendarItem.getNongLi().getMonthStr());
+                        textViewNongLi.setTextColor(Color.BLACK);
+                        textViewNongLi.getPaint().setFakeBoldText(true);
                     } else {
-                        ci_tvNongLi.setText(calendarItem.getNongLi().getDayStr());
+                        textViewNongLi.setText(calendarItem.getNongLi().getDayStr());
                     }
 
-                    // 如果是今天的View，则变换当前View主题
+                    // 今天
                     if (today.compareTo(calendarItem.getYangLi().getDate()) == 0) {
-                        ci_cvIsToday.setVisibility(View.VISIBLE);
-                        ci_tvYangLi.setTextColor(Color.WHITE);
-                        ci_tvNongLi.setTextColor(Color.WHITE);
+                        imageIsToday.setVisibility(View.VISIBLE);
+                        textViewYangLi.setTextColor(Color.WHITE);
+                        textViewNongLi.setTextColor(Color.WHITE);
                         todayPosition = position;
                     }
-                    // 标出选中日期的按钮
+
+                    // 选中的日期
                     if (CalendarHelper.isSameDate(calendarItem.getYangLi(), selectedDate) && !CalendarHelper.isSameDate(calendarItem.getYangLi(), today)) {
-                        ci_cvIsSelected.setVisibility(View.VISIBLE);
+                        imageIsSelected.setVisibility(View.VISIBLE);
                         preSelectedPosition = position;
                     }
-                    // 显示节气
-                    for (Map.Entry<DateTime, SolarTerm> entry : currentMonthSolarTerms.entrySet()) {
-                        today.set(entry.getKey().getYear(), entry.getKey().getMonth(), entry.getKey().get(DateTime.DAY_OF_MONTH), 0, 0, 0);
-                        if (CalendarHelper.isSameDate(today, calendarItem.getYangLi())) {
-                            ci_tvNongLi.setText(entry.getValue().toString());
-//                            ci_tvNongLi.setTextColor(Color.CYAN);
-                            break;
-                        }
-                    }
-                    // 今天非戒期
-                    if (calendarItem.getReligious() == null) {
-                        ci_cvIsUnReligious.setVisibility(View.VISIBLE);
-                    } else if (findReligiousKeyWord(calendarItem.getReligious()) == 1) {
-                        ci_tvNongLi.setTextColor(getResources().getColor(R.color.month_text_color));
-                    }
+                    calendarItemViewsMap.put(calendarItem.getYangLi(), convertView);
                 } else {
-                    ci_tvYangLi.setText("");
-                    ci_tvNongLi.setText("");
+                    textViewYangLi.setText("");
+                    textViewNongLi.setText("");
                 }
             } catch (Exception e) {
-                _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+                _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
             }
             return convertView;
         }
+    }
+
+    /**
+     * 得到指定日期在日历中的position。
+     *
+     * @param dateTime
+     * @return
+     */
+    private int dateTimeToPosition(DateTime dateTime, boolean tag) {
+        int week = dateTime.get(DateTime.WEEK_OF_MONTH);
+        int day_week = dateTime.get(DateTime.DAY_OF_WEEK) - 1;
+        if (day_week == 0) {
+            day_week = 7;
+            week--;
+            if (week == 0) {
+                tag = true;
+            }
+        }
+        if (tag) {
+            week++;
+        }
+        return (week - 1) * 7 + day_week - 1;
     }
 
     private int findReligiousKeyWord(String religious) {
@@ -771,14 +861,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (calendarItem == null) return;
 //        yearMonth.setText(currentYear + "." + format(currentMonth + 1));
 //        yangliBig.setText(seletedDateTime.getDay() + "");
-            textViewSelectedDay.setText(_String.concat(calendarItem.getYangLi().getYear(), "年"));
+//            textViewYear.setText(_String.concat(calendarItem.getYangLi().getYear(), "年"));
+
             try {
                 GanZhi gz = new GanZhi(calendarItem.getYangLi(), this.solarTermMap);
-                textView_ganzhi.setText(_String.concat(gz.getTianGanYear(), gz.getDiZhiYear(), "年 ",
+                textViewGanzhi.setText(_String.concat(gz.getTianGanYear(), gz.getDiZhiYear(), "年 ",
                         gz.getTianGanMonth(), gz.getDiZhiMonth(), "月 ",
                         gz.getTianGanDay(), gz.getDiZhiDay(), "日"));
             } catch (Exception ex) {
-                _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
+                _Utils.printExceptionSycn(MainActivity.this, uiHandler, ex);
             }
 
             layout_religious.removeAllViews();
@@ -819,28 +910,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+            _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
-    }
-
-    /**
-     * 重载日历控件日期。
-     * 使用之前先设定currentYear,currentMonth。
-     */
-    private void refreshCalendarWithDialog(String dialogMessage) {
-        try {
-            progressDialog = ProgressDialog.show(MainActivity.this, "", dialogMessage, true, false);
-        } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
-        }
-
-        new Thread() {
-            @Override
-            public void run() {
-                // 得到当月天数
-                refreshCalendar();
-            }
-        }.start();
     }
 
     /**
@@ -850,10 +921,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private void refreshCalendar() {
         try {
+            refreshCalendarTask.cancel(true);
+            calendarItemsMap.clear();
+            calendarItemViewsMap.clear();
+            currentMonthSolarTerms.clear();
+            religiousDays.clear();
+            remarks.clear();
+
             int maxDayInMonth = 0;
-            DateTime tmpCalendar = new DateTime(currentYear, currentMonth, 1);
-            calendarItemCount = maxDayInMonth = tmpCalendar.getActualMaximum(DateTime.DAY_OF_MONTH);
-            calendarItemCount += tmpCalendar.get(DateTime.DAY_OF_WEEK) - 1;
+            DateTime tmpToday = new DateTime(currentYear, currentMonth, 1);
+            calendarItemLength = maxDayInMonth = tmpToday.getActualMaximum(DateTime.DAY_OF_MONTH);
+            int day_week = tmpToday.get(DateTime.DAY_OF_WEEK) - 1;
+            if (day_week == 0)
+                day_week = 7;
+            calendarItemLength += day_week - 1;
 
             // “今”按钮是否显示
             DateTime today = DateTime.getToday();
@@ -863,34 +944,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 setTodayEnable(true);
             }
 
-            // 得到本月节气
-            currentMonthSolarTerms.clear();
-            for (Map.Entry<DateTime, SolarTerm> entry : solarTermMap.entrySet()) {
-                if (entry.getKey().getYear() == currentYear && entry.getKey().getMonth() == currentMonth) {
-                    currentMonthSolarTerms.put(entry.getKey(), entry.getValue());
-                }
-            }
-
-            // 获得当月戒期信息
-            try {
-                long dt1 = new DateTime().getTimeInMillis();
-                Religious religious = new Religious(MainActivity.this, currentYear, currentMonth, solarTermMap);
-                religiousDays = religious.getReligiousDays();
-                remarks = religious.getRemarks();
-                long dt2 = new DateTime().getTimeInMillis();
-                Log.i("wangsc-runtime", _String.concat("获取戒期数据，用时：", (double) (dt2 - dt1) / 1000, "秒"));
-            } catch (Exception ex) {
-                religiousDays = new HashMap<DateTime, String>();
-                remarks = new HashMap<DateTime, String>();
-                _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
-            }
-
             // 得到填充日历控件所需要的数据
-            calendarItemsMap.clear();
             boolean tag = false;
             for (int i = 1; i <= maxDayInMonth; i++) {
-                int week = tmpCalendar.get(DateTime.WEEK_OF_MONTH);
-                int day_week = tmpCalendar.get(DateTime.DAY_OF_WEEK) - 1;
+                int week = tmpToday.get(DateTime.WEEK_OF_MONTH);
+                day_week = tmpToday.get(DateTime.DAY_OF_WEEK) - 1;
                 if (day_week == 0) {
                     day_week = 7;
                     week--;
@@ -903,25 +961,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 int key = (week - 1) * 7 + day_week - 1;
                 DateTime newCalendar = new DateTime();
-                newCalendar.setTimeInMillis(tmpCalendar.getTimeInMillis());
+                newCalendar.setTimeInMillis(tmpToday.getTimeInMillis());
                 CalendarItem item = new CalendarItem(newCalendar);
-                //
-                DateTime currentDate = newCalendar.getDate();
-                if (religiousDays.containsKey(currentDate)) {
-                    item.setReligious(religiousDays.get(currentDate));
-                }
-                if (remarks.containsKey(currentDate)) {
-                    item.setRemarks(remarks.get(currentDate));
-                }
                 calendarItemsMap.put(key, item);
-                tmpCalendar.add(DateTime.DAY_OF_MONTH, 1);
+                tmpToday.add(DateTime.DAY_OF_MONTH, 1);
             }
             // 填充日历控件
             todayPosition = -1;
             preSelectedPosition = -1;
 
-            if (isFirstTime) {
-                int duration = (Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration, 1).getValue()) + 2) * 1000;
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        userCalender.setAdapter(calendarAdapter);
+                        refreshCalendarTask = new RefreshCalendarTask();
+                        refreshCalendarTask.execute();
+                    } catch (Exception e) {
+                        _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
+                    }
+                }
+            });
+            if (isFirstTime && welcomeDurationIndex != 0) {
+                int duration = _Session.duration[dataContext.getSetting(Setting.KEYS.welcome_duration, 1).getInt()];
                 Log.i("wangsc", "duration: " + duration);
                 long span = duration - (System.currentTimeMillis() - xxxTimeMillis);
                 if (span > 0) {
@@ -931,43 +993,165 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         e.printStackTrace();
                     }
                 }
+                isFirstTime = false;
             }
             uiHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    userCalender.setAdapter(calendarAdapter);
-                    refreshInfoLayout(selectedDate);
-                    layoutWelcome.setVisibility(View.INVISIBLE);
-                    if (progressDialog != null)
-                        progressDialog.dismiss();
+                    try {
+                        layoutWelcome.setVisibility(View.INVISIBLE);
+                    } catch (Exception e) {
+                        _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
+                    }
                 }
             });
-            isFirstTime = false;
         } catch (NumberFormatException e) {
-            _Helper.printExceptionSycn(this, uiHandler, e);
+            _Utils.printExceptionSycn(this, uiHandler, e);
         }
     }
 
-//    private Handler handler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            switch (msg.what) {
-//                case STOP_PROGRESS_DIALOG:
-//                    if (progressDialog != null)
-//                        progressDialog.dismiss();
-//                    break;
-//                case 2:
-////                    btnCurrentMonth.setText(currentYear + "." + format(currentMonth + 1));
-//                    break;
-//                case 3:
-//                    userCalender.setAdapter(calendarAdapter);
-//                    break;
-//                case 4:
-//                    refreshInfoLayout(selectedDate);
-//                    break;
-//            }
-//        }
-//    };
+    int progress;
+
+    private class RefreshCalendarTask extends AsyncTask {
+
+        /**
+         * doInBackground方法内部执行后台任务,不可在此方法内修改UI
+         *
+         * @param params
+         * @return
+         */
+        @Override
+        protected Object doInBackground(Object[] params) {
+            try {
+                progress = 0;
+                // 得到本月节气
+                for (Map.Entry<DateTime, SolarTerm> entry : solarTermMap.entrySet()) {
+                    if (entry.getKey().getYear() == currentYear && entry.getKey().getMonth() == currentMonth) {
+                        currentMonthSolarTerms.put(entry.getKey(), entry.getValue());
+                    }
+                }
+
+                publishProgress(progress++);
+
+                // 获得当月戒期信息
+                try {
+                    Religious religious = new Religious(MainActivity.this, currentYear, currentMonth, solarTermMap, new ReligiousCallBack() {
+                        @Override
+                        public void execute() {
+                            publishProgress(progress++);
+                        }
+                    });
+                    religiousDays = religious.getReligiousDays();
+
+                    publishProgress(progress++);
+                    remarks = religious.getRemarks();
+                } catch (InterruptedException e) {
+                } catch (Exception ex) {
+                    religiousDays = new HashMap<>();
+                    remarks = new HashMap<>();
+                    _Utils.printExceptionSycn(MainActivity.this, uiHandler, ex);
+                }
+                publishProgress(progress++);
+            } catch (Exception e) {
+                _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
+            }
+            return null;
+        }
+
+        /**
+         * onPreExecute方法用于在执行后台任务前做一些UI操作
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBarLoading.setVisibility(View.VISIBLE);
+            progressBarLoading.setProgress(0);
+            progressBarLoading.setMax(selectedDate.getActualMaximum(DateTime.DAY_OF_MONTH));
+        }
+
+        /**
+         * onProgressUpdate方法用于更新进度信息
+         *
+         * @param values
+         */
+        @Override
+        protected void onProgressUpdate(Object[] values) {
+            super.onProgressUpdate(values);
+            progressBarLoading.setProgress((int) values[0]);
+        }
+
+        /**
+         * onPostExecute方法用于在执行完后台任务后更新UI,显示结果
+         *
+         * @param o
+         */
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+            try {
+                Boolean tag = false;
+                DateTime dateTime = new DateTime(selectedDate.getYear(), selectedDate.getMonth(), 1);
+                if (dateTime.get(DateTime.DAY_OF_WEEK) - 1 == 0) {
+                    tag = true;
+                }
+
+                for (Map.Entry<DateTime, View> entry : calendarItemViewsMap.entrySet()) {
+                    CalendarItem calendarItem = calendarItemsMap.get(dateTimeToPosition(entry.getKey(), tag));
+                    if (calendarItem != null) {
+                        View convertView = entry.getValue();
+                        TextView textViewNongLi = (TextView) convertView.findViewById(R.id.calendarItem_tv_NongLiDay);
+                        ImageView imageIsUnReligious = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsUnReligious);
+
+                        // 节气
+                        for (Map.Entry<DateTime, SolarTerm> termEntry : currentMonthSolarTerms.entrySet()) {
+                            DateTime today = new DateTime(termEntry.getKey().getYear(), termEntry.getKey().getMonth(), termEntry.getKey().get(DateTime.DAY_OF_MONTH), 0, 0, 0);
+                            if (CalendarHelper.isSameDate(today, calendarItem.getYangLi())) {
+                                textViewNongLi.setText(termEntry.getValue().toString());
+                                //                            textViewNongLi.setTextColor(Color.CYAN);
+                                break;
+                            }
+                        }
+
+                        //
+                        DateTime currentDate = entry.getKey().getDate();
+                        if (religiousDays.containsKey(currentDate)) {
+                            calendarItem.setReligious(religiousDays.get(currentDate));
+                        }
+                        if (remarks.containsKey(currentDate)) {
+                            calendarItem.setRemarks(remarks.get(currentDate));
+                        }
+
+                        // 非戒期日
+                        if (calendarItem.getReligious() == null) {
+                            imageIsUnReligious.setVisibility(View.VISIBLE);
+                        }
+                        // 戒期日，找到警示关键字。
+                        else if (findReligiousKeyWord(calendarItem.getReligious()) == 1) {
+                            textViewNongLi.setTextColor(getResources().getColor(R.color.month_text_color));
+                        }
+                        refreshInfoLayout(selectedDate);
+                    }
+                }
+            } catch (Exception e) {
+                _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
+            } finally {
+                progressBarLoading.setVisibility(View.GONE);
+            }
+        }
+
+        /**
+         * onCancelled方法用于在取消执行中的任务时更改UI
+         */
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+
+            progressBarLoading.setVisibility(View.VISIBLE);
+            progressBarLoading.setProgress(0);
+        }
+    }
+
 
     /**
      * 事件 - 改变月份按钮
@@ -978,7 +1162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             try {
                 showMonthPickerDialog(currentYear, currentMonth);
             } catch (Exception ex) {
-                _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
+                _Utils.printExceptionSycn(MainActivity.this, uiHandler, ex);
             }
         }
     };
@@ -1088,7 +1272,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    }
 //                });
 //            } catch (Exception e) {
-//                _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+//                _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
 //            }
 //        }
 //
@@ -1107,7 +1291,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (!calendarItemsMap.containsKey(position)) return;
 
                 CalendarItem calendarItem = calendarItemsMap.get(position);
-                CalendarItem preCalendarItem = calendarItemsMap.get(preSelectedPosition);
                 if (todayPosition != -1) {
                     if (preSelectedPosition != -1 && preSelectedPosition != todayPosition) {
                         parent.getChildAt(preSelectedPosition).findViewById(R.id.calendarItem_cvIsSelected).setVisibility(View.INVISIBLE);
@@ -1126,7 +1309,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //
                 setSelectedDate(calendarItem.getYangLi().getYear(), calendarItem.getYangLi().getMonth(), calendarItem.getYangLi().getDay());
             } catch (Exception e) {
-                _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+                _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
             }
         }
     };
@@ -1144,7 +1327,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 DateTime today = DateTime.getToday();
                 setSelectedDate(today.getYear(), today.getMonth(), today.getDay());
             } catch (Exception e) {
-                _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+                _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
             }
         }
     };
@@ -1170,8 +1353,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (monthHasChanged) {
                 currentYear = year;
                 currentMonth = month;
+                refreshCalendar();
                 setButtonMonthText();
-                refreshCalendarWithDialog(_String.concat("正在加载", currentYear, "年", currentMonth + 1, "月份", "戒期信息。"));
+//                refreshCalendarWithDialog(_String.concat("正在加载", currentYear, "年", currentMonth + 1, "月份", "戒期信息。"));
             }
 
             // “今”按钮是否显示
@@ -1186,7 +1370,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //
             refreshInfoLayout(selectedDate);
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+            _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
     }
 
@@ -1202,31 +1386,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void run() {
                     if (value) {
-                        button_today.setVisibility(View.VISIBLE);
-                        imageButton_leftMenu.setVisibility(View.INVISIBLE);
+//                        buttonToday.setVisibility(View.VISIBLE);
+                        buttonToday.setTextColor(getResources().getColor(R.color.month_text_color));
+                        buttonToday.setClickable(true);
+//                        imageButton_leftMenu.setVisibility(View.INVISIBLE);
                     } else {
-                        button_today.setVisibility(View.INVISIBLE);
-                        imageButton_leftMenu.setVisibility(View.VISIBLE);
+//                        buttonToday.setVisibility(View.INVISIBLE);
+                        buttonToday.setTextColor(getResources().getColor(R.color.hint_foreground_material_light));
+                        buttonToday.setClickable(false);
+//                        imageButton_leftMenu.setVisibility(View.VISIBLE);
                     }
                 }
             });
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+            _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
     }
-
-    /**
-     * 事件 - 选中日历某天
-     */
-    private AdapterView.OnItemSelectedListener userCalender_OnItemSelectedListener = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-        }
-    };
 
     /**
      * 小于10前追加‘0’
@@ -1269,9 +1444,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 dis.close();
             }
         } catch (Resources.NotFoundException e) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+            _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+            _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
         // 按照KEY排序TreeMap
 //        TreeMap<DateTime, SolarTerm> result = new TreeMap<DateTime, SolarTerm>(new Comparator<DateTime>() {
@@ -1311,7 +1486,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             dos.close();
             fos.close();
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+            _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
     }
 
@@ -1344,9 +1519,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             stream.close();
         } catch (Resources.NotFoundException e) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+            _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+            _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
         return solarTermMap;
     }
@@ -1433,14 +1608,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             switch (requestCode) {
                 case TO_SETTING_ACTIVITY:
                     if (SettingActivity.isCalenderChanged) {
-                        refreshCalendarWithDialog("配置已更改，正在重新加载...");
+//                        refreshCalendarWithDialog("配置已更改，正在重新加载...");
+                        refreshCalendar();
                     }
                     if (SettingActivity.isRecordSetChanged) {
                         initRecordPart();
@@ -1451,11 +1626,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     break;
             }
         } catch (NumberFormatException e) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+            _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 
     public void showAddSexualDayDialog() {
 
@@ -1541,7 +1715,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     initRecordPart();
                     dialog.dismiss();
                 } catch (Exception e) {
-                    _Helper.printException(MainActivity.this, e);
+                    _Utils.printException(MainActivity.this, e);
                 }
             }
         });
@@ -1551,7 +1725,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 try {
                     dialog.dismiss();
                 } catch (Exception e) {
-                    _Helper.printException(MainActivity.this, e);
+                    _Utils.printException(MainActivity.this, e);
                 }
             }
         });

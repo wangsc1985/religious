@@ -1,14 +1,9 @@
 package com.wang17.religiouscalendar.fragment;
 
 
-import android.animation.AnimatorInflater;
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,16 +11,13 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.wang17.religiouscalendar.R;
-import com.wang17.religiouscalendar.activity.SexualDayRecordActivity;
-import com.wang17.religiouscalendar.helper._Helper;
-import com.wang17.religiouscalendar.helper._String;
+import com.wang17.religiouscalendar.util._Utils;
+import com.wang17.religiouscalendar.util._String;
 import com.wang17.religiouscalendar.model.DataContext;
 import com.wang17.religiouscalendar.model.DateTime;
 import com.wang17.religiouscalendar.model.SexualDay;
@@ -204,7 +196,7 @@ public class ActionBarFragment extends Fragment {
                         setTextViewSexualText();
                         dialog.dismiss();
                     } catch (Exception e) {
-                        _Helper.printException(getContext(),e);
+                        _Utils.printException(getContext(),e);
                     }
                 }
             });
@@ -214,7 +206,7 @@ public class ActionBarFragment extends Fragment {
                     try {
                         dialog.dismiss();
                     } catch (Exception e) {
-                        _Helper.printException(getContext(),e);
+                        _Utils.printException(getContext(),e);
                     }
                 }
             });

@@ -8,11 +8,13 @@ public class LunarDateTime {
     private int year;
     private int month;
     private int day;
+    private boolean leap;
 
-    public LunarDateTime(int lunnarYear, int lunnarMonth, int lunnarDay) {
+    public LunarDateTime(int lunnarYear, int lunnarMonth, int lunnarDay,boolean leap) {
         this.year = lunnarYear;
         this.month = lunnarMonth;
         this.day = lunnarDay;
+        this.leap = leap;
     }
 
     public int getYear(){
@@ -24,6 +26,11 @@ public class LunarDateTime {
     public int getDay(){
         return this.day;
     }
+
+    public boolean isLeap() {
+        return leap;
+    }
+
     public String getYearStr() {
         StringBuilder res = new StringBuilder();
         String str = String.valueOf(year);

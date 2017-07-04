@@ -1,6 +1,6 @@
 package com.wang17.religiouscalendar.model;
 
-import com.wang17.religiouscalendar.helper._String;
+import com.wang17.religiouscalendar.util._String;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.wang17.religiouscalendar.helper;
+package com.wang17.religiouscalendar.util;
 
 import java.util.Calendar;
 

@@ -1,4 +1,4 @@
-package com.wang17.religiouscalendar.helper;
+package com.wang17.religiouscalendar.util;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,6 +7,7 @@ import com.wang17.religiouscalendar.model.DataContext;
 import com.wang17.religiouscalendar.model.DateTime;
 import com.wang17.religiouscalendar.model.LunarDate;
 import com.wang17.religiouscalendar.model.MemorialDay;
+import com.wang17.religiouscalendar.model.ReligiousCallBack;
 import com.wang17.religiouscalendar.model.Setting;
 import com.wang17.religiouscalendar.emnu.SolarTerm;
 
@@ -38,7 +39,7 @@ public class Religious {
     private List<MemorialDay> memorialDays;
     private int year, month;
 
-    public Religious(Context context, int year, int month, TreeMap<DateTime, SolarTerm> solarTermTreeMap) throws Exception {
+    public Religious(Context context, int year, int month, TreeMap<DateTime, SolarTerm> solarTermTreeMap, ReligiousCallBack callBack) throws Exception {
         this.year = year;
         this.month = month;
         this.solarTermTreeMap = solarTermTreeMap;
@@ -50,27 +51,23 @@ public class Religious {
         setting = dataContext.getSetting(Setting.KEYS.zodiac2);
         zodiac2 = setting == null ? null : setting.getValue();
 
-        setting = dataContext.getSetting(Setting.KEYS.szr, swith_szr );
+        setting = dataContext.getSetting(Setting.KEYS.szr, swith_szr);
         swith_szr = Boolean.parseBoolean(setting.getValue());
 
-        setting = dataContext.getSetting(Setting.KEYS.lzr, swith_lzr );
+        setting = dataContext.getSetting(Setting.KEYS.lzr, swith_lzr);
         swith_lzr = Boolean.parseBoolean(setting.getValue());
 
-        setting = dataContext.getSetting(Setting.KEYS.gyz, swith_gyz );
+        setting = dataContext.getSetting(Setting.KEYS.gyz, swith_gyz);
         swith_gyz = Boolean.parseBoolean(setting.getValue());
 
-
+        callBack.execute();
         memorialDays = dataContext.getMemorialDays();
 
-        long dt1 = new DateTime().getTimeInMillis();
+        callBack.execute();
         this.loadLunarReligiousDays();
-        long dt2 = new DateTime().getTimeInMillis();
-        Log.i("wangsc-runtime", _String.concat("获取农历戒期数据，用时：", (double) (dt2 - dt1) / 1000, "秒"));
+        callBack.execute();
 
-        dt1 = new DateTime().getTimeInMillis();
-        this.loadReligiousDays(year, month);
-        dt2 = new DateTime().getTimeInMillis();
-        Log.i("wangsc-runtime", _String.concat("获取干支戒期数据，用时：", (double) (dt2 - dt1) / 1000, "秒"));
+        this.loadReligiousDays(year, month, callBack);
     }
 
     private Map.Entry<DateTime, SolarTerm> find(DateTime startDate, DateTime endDate, SolarTerm solarTerm) {
@@ -102,7 +99,7 @@ public class Religious {
     /// 载入给定时间当月的所有干支戒期。干支戒期，依据天干地支订立，所以每年戒期的时间都是不一样的。
     /// </summary>
     /// <param name="Calendar"></param>
-    private void loadReligiousDays(int year, int month) throws Exception {
+    private void loadReligiousDays(int year, int month, ReligiousCallBack callBack) throws Exception {
         //
         religiousDays = new HashMap<DateTime, String>();
         remarks = new HashMap<DateTime, String>();
@@ -126,6 +123,7 @@ public class Religious {
         /// 此二节之前三后三共七日。犯之必得危疾。尤宜切戒。
         Map.Entry<DateTime, SolarTerm> solar = find(startDate.addDays(-3), endDate.addDays(3), SolarTerm.春分);
 
+        callBack.execute();
         if (solar != null) {
             this.AddReligiousDay(solar.getKey().addDays(-3).getDate(), "春分前三日。犯之必得危疾。尤宜切戒。");
             this.AddReligiousDay(solar.getKey().addDays(-2).getDate(), "春分前二日。犯之必得危疾。尤宜切戒。");
@@ -147,6 +145,7 @@ public class Religious {
         }
         long dt2 = new DateTime().getTimeInMillis();
         Log.i("wangsc-runtime", _String.concat("获取二分日，用时：", (double) (dt2 - dt1) / 1000, "秒"));
+        callBack.execute();
 
         dt1 = new DateTime().getTimeInMillis();
         /// *******二至日*********
@@ -166,6 +165,7 @@ public class Religious {
         }
         dt2 = new DateTime().getTimeInMillis();
         Log.i("wangsc-runtime", _String.concat("获取二至日，用时：", (double) (dt2 - dt1) / 1000, "秒"));
+        callBack.execute();
 
         dt1 = new DateTime().getTimeInMillis();
         solar = find(startDate.addDays(-48), endDate.addDays(3), SolarTerm.冬至);
@@ -206,6 +206,7 @@ public class Religious {
         }
         dt2 = new DateTime().getTimeInMillis();
         Log.i("wangsc-runtime", _String.concat("获取冬至、后庚辛第三戌日，用时：", (double) (dt2 - dt1) / 1000, "秒"));
+        callBack.execute();
 
 
         dt1 = new DateTime().getTimeInMillis();
@@ -232,12 +233,14 @@ public class Religious {
                 }
             }
         }
+        callBack.execute();
 
         solar = find(startDate, endDate.addDays(1), SolarTerm.立夏);
         if (solar != null) {
             this.AddReligiousDay(solar.getKey().addDays(-1).getDate(), "立夏日前一日（四绝日）。犯之减寿五年。");
             this.AddReligiousDay(solar.getKey().getDate(), "立夏日(四立日)。犯之减寿五年。");
         }
+        callBack.execute();
 
         solar = find(startDate.addDays(-60), endDate.addDays(1), SolarTerm.立秋);
         if (solar != null) {
@@ -261,6 +264,7 @@ public class Religious {
                 }
             }
         }
+        callBack.execute();
 
         solar = find(startDate, endDate.addDays(1), SolarTerm.立冬);
         if (solar != null) {
@@ -269,6 +273,7 @@ public class Religious {
         }
         dt2 = new DateTime().getTimeInMillis();
         Log.i("wangsc-runtime", _String.concat("获取四立日，用时：", (double) (dt2 - dt1) / 1000, "秒"));
+        callBack.execute();
 
         dt1 = new DateTime().getTimeInMillis();
 
@@ -293,6 +298,7 @@ public class Religious {
                 }
             }
         }
+        callBack.execute();
         /// 中伏：夏至后第四个庚日起到立秋后第一个庚日前的一段时间叫中伏，也叫二伏。犯之减寿一年。
         /// 末伏：立秋后第一个庚日起到第二个庚日前一天的一段时间叫末伏，也叫终伏。犯之减寿一年。
         {
@@ -314,6 +320,7 @@ public class Religious {
                 }
             }
         }
+        callBack.execute();
         dt2 = new DateTime().getTimeInMillis();
         Log.i("wangsc-runtime", _String.concat("获取三伏日，用时：", (double) (dt2 - dt1) / 1000, "秒"));
 
@@ -615,9 +622,8 @@ public class Religious {
 
             //
             day = day.addDays(1);
+            callBack.execute();
         }
-        dt2 = new DateTime().getTimeInMillis();
-        Log.i("wangsc-runtime", _String.concat("获取便捷的持戒日，用时：", (double) (dt2 - dt1) / 1000, "秒"));
     }
 
     private String ZodiacToDizhi(String zodiac) {

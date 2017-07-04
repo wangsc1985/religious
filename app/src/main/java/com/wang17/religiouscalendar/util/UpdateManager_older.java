@@ -1,4 +1,4 @@
-package com.wang17.religiouscalendar.helper;
+package com.wang17.religiouscalendar.util;
 
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -82,19 +82,19 @@ public class UpdateManager_older {
     public UpdateManager_older(Context context) throws PermissionIsNotFullException {
         String permission = "";
         boolean legal = true;
-        if (!_Helper.havePermission(context, "android.permission.ACCESS_NETWORK_STATE")) {
+        if (!_Utils.havePermission(context, "android.permission.ACCESS_NETWORK_STATE")) {
             permission += "网络状态权限\n";
             legal = false;
         }
-        if (!_Helper.havePermission(context, "android.permission.INTERNET")) {
+        if (!_Utils.havePermission(context, "android.permission.INTERNET")) {
             permission += "访问网络权限\n";
             legal = false;
         }
-        if (!_Helper.havePermission(context, "android.permission.WRITE_EXTERNAL_STORAGE")) {
+        if (!_Utils.havePermission(context, "android.permission.WRITE_EXTERNAL_STORAGE")) {
             permission += "向SD卡写入数据权限\n";
             legal = false;
         }
-//        if (!_Helper.havePermission(context, "android.permission.MOUNT_UNMOUNT_FILESYSTEMS")) {
+//        if (!_Utils.havePermission(context, "android.permission.MOUNT_UNMOUNT_FILESYSTEMS")) {
 //            permission += "在SD卡中创建与删除文件权限\n";
 //            legal = false;
 //        }
@@ -119,7 +119,7 @@ public class UpdateManager_older {
         this.isBackground = isBackground;
 
         //
-        if (!isBackground && _Helper.isNetworkAvailable(mContext))
+        if (!isBackground && _Utils.isNetworkAvailable(mContext))
             dialog = ProgressDialog.show(mContext, "", "正在检查更新...", true, false);
 //            dialog = new Builder(mContext).setTitle("").setMessage("正在检查更新。").setCancelable(false).show();
 
@@ -135,7 +135,7 @@ public class UpdateManager_older {
                 try {
 
                     boolean isUpdate = false;
-                    if (_Helper.isNetworkAvailable(mContext)) {
+                    if (_Utils.isNetworkAvailable(mContext)) {
                         isUpdate = isHaveNewVersion();
                     } else {
                         //
@@ -268,8 +268,8 @@ public class UpdateManager_older {
 
     private void startDownload() {
 
-        if (_Helper.isNetworkAvailable(mContext)) {
-            if (_Helper.isWiFiActive(mContext)) {
+        if (_Utils.isNetworkAvailable(mContext)) {
+            if (_Utils.isWiFiActive(mContext)) {
                 showDownloadDialog();
             } else {
                 //

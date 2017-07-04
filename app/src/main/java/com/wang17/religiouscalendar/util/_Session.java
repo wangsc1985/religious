@@ -1,4 +1,4 @@
-package com.wang17.religiouscalendar.helper;
+package com.wang17.religiouscalendar.util;
 
 import android.support.v7.app.AppCompatActivity;
 
@@ -25,7 +25,6 @@ public class _Session extends AppCompatActivity {
         welcomes.add(new PicNameRes(R.mipmap.welcome05, "观世音菩萨五"));
         welcomes.add(new PicNameRes(R.mipmap.amtf, "南无阿弥陀佛"));
         welcomes.add(new PicNameRes(R.mipmap.jyt, "阿弥陀佛接引图"));
-        welcomes.add(new PicNameRes(R.mipmap.welcome, "寿康宝鉴"));
 
         banners = new ArrayList<PicNameRes>();
         banners.add(new PicNameRes(R.mipmap.banner01, "释迦牟尼佛"));
@@ -35,4 +34,6 @@ public class _Session extends AppCompatActivity {
         banners.add(new PicNameRes(R.mipmap.banner04, "善导大师"));
         banners.add(new PicNameRes(R.mipmap.banner06, "佛法会"));
     }
+
+    public static int[] duration = new int[]{0,3000,4000,5000,6000,7000};
 }

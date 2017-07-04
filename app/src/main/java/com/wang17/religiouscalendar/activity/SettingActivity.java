@@ -31,9 +31,9 @@ import com.wang17.religiouscalendar.emnu.MDtype;
 import com.wang17.religiouscalendar.emnu.Zodiac;
 import com.wang17.religiouscalendar.fragment.ActionBarFragment;
 import com.wang17.religiouscalendar.fragment.ActionBarFragment.OnActionFragmentBackListener;
-import com.wang17.religiouscalendar.helper._Helper;
-import com.wang17.religiouscalendar.helper._Session;
-import com.wang17.religiouscalendar.helper._String;
+import com.wang17.religiouscalendar.util._Utils;
+import com.wang17.religiouscalendar.util._Session;
+import com.wang17.religiouscalendar.util._String;
 import com.wang17.religiouscalendar.model.DataContext;
 import com.wang17.religiouscalendar.model.DateTime;
 import com.wang17.religiouscalendar.model.LunarDate;
@@ -59,13 +59,6 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
     private MDlistdAdapter mdListAdapter;
     private List<HashMap<String, String>> mdListItems;
 
-    //    private static final String BUTTON_STATUS_TEXT_OFF = "已关闭";
-//    private static final String BUTTON_STATUS_TEXT_ON = "已开启";
-    private static final String BUTTON_WAY_TEXT_AUTO = "自动";
-    private static final String BUTTON_WAY_TEXT_CUSTOM = "自定义";
-    private static final String BUTTON_TARGET_TEXT = "设定行房周期";
-    private static final String BUTTON_TARGET_AUTO_TEXT = "自动生成";
-    private static final String BUTTON_BIRTHDAY_TEXT = "设定生日";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +89,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 //            layoutOpened = (LinearLayout) findViewById(R.id.layout_opened);
 
             btnRecordStatus = (Button) findViewById(R.id.button_recordStatus);
-            btnWay = (Button) findViewById(R.id.button_targetWay);
+//            btnWay = (Button) findViewById(R.id.button_targetWay);
             btnBirthday = (Button) findViewById(R.id.button_birthday);
             btnTarget = (Button) findViewById(R.id.button_customTarget);
 
@@ -104,7 +97,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             this.initializeEvents();
             Log.i("wangsc", "SettingActivity have loaded ...");
         } catch (Exception ex) {
-            _Helper.printExceptionSycn(SettingActivity.this, uiHandler, ex);
+            _Utils.printExceptionSycn(SettingActivity.this, uiHandler, ex);
         }
     }
 
@@ -122,25 +115,11 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 
             if (Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getValue()) == true) {
                 btnRecordStatus.setBackgroundResource(R.drawable.on);
-//                layoutOpened.setVisibility(View.VISIBLE);
-
-
             } else {
                 btnRecordStatus.setBackgroundResource(R.drawable.off);
-//                layoutOpened.setVisibility(View.GONE);
             }
 
-            btnBirthday.setText(BUTTON_BIRTHDAY_TEXT);
-            btnTarget.setText(BUTTON_TARGET_TEXT);
-            if (Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.targetAuto, true).getValue()) == true) {
-                btnWay.setText(BUTTON_WAY_TEXT_AUTO);
-                layoutBirthday.setVisibility(View.VISIBLE);
-                autoWayDataInit();
-            } else {
-                btnWay.setText(BUTTON_WAY_TEXT_CUSTOM);
-                layoutBirthday.setVisibility(View.GONE);
-                customWayDataInit();
-            }
+            autoWayDataInit();
 
             /**
              * 开关记录
@@ -149,23 +128,20 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                 @Override
                 public void onClick(View v) {
                     if (dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getBoolean() == false) {
-                        if (dataContext.getSetting(Setting.KEYS.targetAuto).getBoolean() == true) {
-                            if (dataContext.getSetting(Setting.KEYS.birthday) == null) {
-                                new AlertDialog.Builder(SettingActivity.this).setMessage("请先设定生日！").show();
-                                return;
-                            }
+                        if (dataContext.getSetting(Setting.KEYS.birthday) == null) {
+                            showBirthdayDialog(SettingActivity.this, "请先设定生日", new CallBack() {
+                                @Override
+                                public void execute() {
+                                    btnRecordStatus.setBackgroundResource(R.drawable.on);
+                                    dataContext.editSetting(Setting.KEYS.recordIsOpened, true);
+                                }
+                            });
                         } else {
-                            if (dataContext.getSetting(Setting.KEYS.targetInHour) == null) {
-                                new AlertDialog.Builder(SettingActivity.this).setMessage("请先设定行房周期！").show();
-                                return;
-                            }
+                            btnRecordStatus.setBackgroundResource(R.drawable.on);
+                            dataContext.editSetting(Setting.KEYS.recordIsOpened, true);
                         }
-                        btnRecordStatus.setBackgroundResource(R.drawable.on);
-//                        layoutOpened.setVisibility(View.VISIBLE);
-                        dataContext.editSetting(Setting.KEYS.recordIsOpened, true);
                     } else {
                         btnRecordStatus.setBackgroundResource(R.drawable.off);
-//                        layoutOpened.setVisibility(View.GONE);
                         dataContext.editSetting(Setting.KEYS.recordIsOpened, false);
                     }
                     isRecordSetChanged = true;
@@ -173,51 +149,13 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             });
 
             /**
-             * 间隔方式：自动、自定义。
-             */
-            btnWay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (btnWay.getText().equals(BUTTON_WAY_TEXT_AUTO)) {
-                        btnWay.setText(BUTTON_WAY_TEXT_CUSTOM);
-                        layoutBirthday.setVisibility(View.GONE);
-                        dataContext.editSetting(Setting.KEYS.targetAuto, false);
-                        if (dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getBoolean() == true && dataContext.getSetting(Setting.KEYS.targetInHour) == null) {
-                            showTargetDialog(SettingActivity.this);
-                        } else {
-                            customWayDataInit();
-                        }
-                    } else {
-                        btnWay.setText(BUTTON_WAY_TEXT_AUTO);
-                        layoutBirthday.setVisibility(View.VISIBLE);
-                        dataContext.editSetting(Setting.KEYS.targetAuto, true);
-                        if (dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getBoolean() == true && dataContext.getSetting(Setting.KEYS.birthday) == null) {
-                            showBirthdayDialog(SettingActivity.this);
-                        } else {
-                            autoWayDataInit();
-                        }
-                    }
-                    isRecordSetChanged = true;
-                }
-            });
-            /**
              * 设置生日按钮
              */
             btnBirthday.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == true)
-                        showBirthdayDialog(SettingActivity.this);
-                }
-            });
-            /**
-             * 自定义间隔
-             */
-            btnTarget.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == false)
-                        showTargetDialog(SettingActivity.this);
+                        showBirthdayDialog(SettingActivity.this, "设定生日", null);
                 }
             });
 
@@ -279,24 +217,10 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             spinner_duration.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration, 1).getValue()), true);
 
         } catch (Exception e) {
-            _Helper.printExceptionSycn(this, uiHandler, e);
+            _Utils.printExceptionSycn(this, uiHandler, e);
         }
 //        mdListAdapter = new MDlistdAdapter();
 //        listViewMD.setAdapter(mdListAdapter);
-    }
-
-    private void customWayDataInit() {
-        try {
-            Setting settingCustom = dataContext.getSetting(Setting.KEYS.targetInHour);
-            if (settingCustom != null) {
-                int targetInHour = Integer.parseInt(settingCustom.getValue());
-                btnTarget.setText(DateTime.toSpanString(targetInHour));
-            } else {
-                btnTarget.setText(BUTTON_TARGET_TEXT);
-            }
-        } catch (Exception e) {
-            _Helper.printException(this, e);
-        }
     }
 
     private void autoWayDataInit() {
@@ -305,13 +229,12 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             if (settingBirthday != null) {
                 DateTime birthday = settingBirthday.getDateTime();
                 btnBirthday.setText(birthday.toShortDateString());
-                btnTarget.setText(DateTime.toSpanString(_Helper.getTargetInMillis(birthday), 4, 3));
+                btnTarget.setText(DateTime.toSpanString(_Utils.getTargetInMillis(birthday), 4, 3));
             } else {
-                btnBirthday.setText(BUTTON_BIRTHDAY_TEXT);
-                btnTarget.setText(BUTTON_TARGET_AUTO_TEXT);
+                btnBirthday.setText("设定生日");
             }
         } catch (Exception e) {
-            _Helper.printException(this, e);
+            _Utils.printException(this, e);
         }
     }
 
@@ -438,7 +361,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                     isCalenderChanged = true;
                     snackbar("添加成功");
                 } catch (Exception ex) {
-                    _Helper.printExceptionSycn(SettingActivity.this, uiHandler, ex);
+                    _Utils.printExceptionSycn(SettingActivity.this, uiHandler, ex);
                 }
             }
         });
@@ -525,7 +448,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 
     private void initializeDuration() {
         List<String> list = new ArrayList<String>();
-        list.add("2秒");
+        list.add("0秒");
         list.add("3秒");
         list.add("4秒");
         list.add("5秒");
@@ -647,11 +570,11 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         Snackbar.make(root, message, Snackbar.LENGTH_LONG).show();
     }
 
-    public void showBirthdayDialog(final Context context) {
+    public void showBirthdayDialog(final Context context, String title, final CallBack callBack) {
 
         View view = View.inflate(context, R.layout.inflate_dialog_date_picker, null);
         android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(context).setView(view).create();
-        dialog.setTitle("设定生日");
+        dialog.setTitle(title);
         final NumberPicker npYear = (NumberPicker) view.findViewById(R.id.npYear);
         final NumberPicker npMonth = (NumberPicker) view.findViewById(R.id.npMonth);
         final NumberPicker npDay = (NumberPicker) view.findViewById(R.id.npDay);
@@ -661,6 +584,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         DateTime date = null;
         if (setting == null) {
             date = new DateTime();
+            date.add(Calendar.YEAR, -20);
         } else {
             date = setting.getDateTime();
         }
@@ -700,9 +624,8 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             npDay.setValue(day);
             npDay.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
         } catch (Exception e) {
-            _Helper.printException(SettingActivity.this, e);
+            _Utils.printException(SettingActivity.this, e);
         }
-
 
         npMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -731,12 +654,16 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                     dataContext.editSetting(Setting.KEYS.birthday, selectedDateTime.getTimeInMillis());
                     isRecordSetChanged = true;
                     autoWayDataInit();
+                    if (callBack != null) {
+                        callBack.execute();
+                    }
                     dialog.dismiss();
                 } catch (Exception e) {
-                    _Helper.printException(context, e);
+                    _Utils.printException(context, e);
                 }
             }
         });
+
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener()
 
         {
@@ -744,21 +671,19 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     dialog.dismiss();
-                    if (dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getBoolean() == true
-                            && dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == true
-                            && dataContext.getSetting(Setting.KEYS.birthday) == null) {
-                        dataContext.editSetting(Setting.KEYS.recordIsOpened, false);
-                        btnRecordStatus.setBackgroundResource(R.drawable.off);
-                    }
                 } catch (Exception e) {
-                    _Helper.printException(context, e);
+                    _Utils.printException(context, e);
                 }
             }
         });
         dialog.show();
     }
 
+    private interface CallBack {
+        void execute();
+    }
 
+/*
     public void showTargetDialog(final Context context) {
 
         try {
@@ -810,7 +735,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                         customWayDataInit();
                         dialog.dismiss();
                     } catch (Exception e) {
-                        _Helper.printException(context, e);
+                        _Utils.printException(context, e);
                     }
                 }
             });
@@ -826,7 +751,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                             btnRecordStatus.setBackgroundResource(R.drawable.off);
                         }
                     } catch (Exception e) {
-                        _Helper.printException(context, e);
+                        _Utils.printException(context, e);
                     }
                 }
             });
@@ -834,7 +759,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Override
     protected void onPause() {

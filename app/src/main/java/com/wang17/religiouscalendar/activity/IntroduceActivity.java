@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.fragment.ActionBarFragment;
-import com.wang17.religiouscalendar.helper._Session;
 
 public class IntroduceActivity extends AppCompatActivity implements ActionBarFragment.OnActionFragmentBackListener  {
 

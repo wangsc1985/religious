@@ -8,7 +8,6 @@
     android:id="@+id/layout_banner">
 
 
-
     <ImageView
         android:id="@+id/imageView_banner"
         android:layout_width="fill_parent"
@@ -17,5 +16,6 @@
         android:background="#2633a1"
         android:contentDescription=""
         android:src="@mipmap/banner01" />
+
 
 </FrameLayout>

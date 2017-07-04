@@ -11,8 +11,8 @@ import android.widget.ImageView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
-import com.wang17.religiouscalendar.helper._Helper;
-import com.wang17.religiouscalendar.helper._Session;
+import com.wang17.religiouscalendar.util._Utils;
+import com.wang17.religiouscalendar.util._Session;
 import com.wang17.religiouscalendar.model.DataContext;
 import com.wang17.religiouscalendar.model.Setting;
 
@@ -70,7 +70,7 @@ public class WelcomeActivity extends ActionBarActivity {
             });
             welcomeImg.startAnimation(animation);
         } catch (Exception ex) {
-            _Helper.printExceptionSycn(WelcomeActivity.this,uiHandler,ex);
+            _Utils.printExceptionSycn(WelcomeActivity.this,uiHandler,ex);
         }
     }
 

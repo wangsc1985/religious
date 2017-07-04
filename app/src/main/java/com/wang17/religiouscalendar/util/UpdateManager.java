@@ -1,4 +1,4 @@
-package com.wang17.religiouscalendar.helper;
+package com.wang17.religiouscalendar.util;
 
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -198,19 +198,19 @@ public class UpdateManager {
 
         String permission = "";
         boolean isLegal = true;
-        if (!_Helper.havePermission(mContext, "android.permission.ACCESS_NETWORK_STATE")) {
+        if (!_Utils.havePermission(mContext, "android.permission.ACCESS_NETWORK_STATE")) {
             permission += "网络状态权限\n";
             isLegal = false;
         }
-        if (!_Helper.havePermission(mContext, "android.permission.INTERNET")) {
+        if (!_Utils.havePermission(mContext, "android.permission.INTERNET")) {
             permission += "访问网络权限\n";
             isLegal = false;
         }
-        if (!_Helper.havePermission(mContext, "android.permission.WRITE_EXTERNAL_STORAGE")) {
+        if (!_Utils.havePermission(mContext, "android.permission.WRITE_EXTERNAL_STORAGE")) {
             permission += "向SD卡写入数据权限\n";
             isLegal = false;
         }
-//        if (!_Helper.havePermission(context, "android.permission.MOUNT_UNMOUNT_FILESYSTEMS")) {
+//        if (!_Utils.havePermission(context, "android.permission.MOUNT_UNMOUNT_FILESYSTEMS")) {
 //            permission += "在SD卡中创建与删除文件权限\n";
 //            isLegal = false;
 //        }
@@ -219,12 +219,12 @@ public class UpdateManager {
             return;
         }
 
-        if (!_Helper.isNetworkAvailable(mContext)) {
+        if (!_Utils.isNetworkAvailable(mContext)) {
             //
             showWarningDialog("请先打开网络，然后再更新。");
             return;
         }
-        if (!_Helper.isWiFiActive(mContext)) {
+        if (!_Utils.isWiFiActive(mContext)) {
             //
             mbUiThreadHandler.post(new Runnable() {
                 @Override

@@ -1,4 +1,4 @@
-package com.wang17.religiouscalendar.helper;
+package com.wang17.religiouscalendar.util;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -14,7 +14,7 @@ import com.wang17.religiouscalendar.model.RunLog;
 /**
  * Created by 阿弥陀佛 on 2016/10/2.
  */
-public class _Helper {
+public class _Utils {
 
     /**
      * 行房节欲期
@@ -29,9 +29,9 @@ public class _Helper {
             age -= 1;
         }
         double day = 100;
-        if (age < 18) {
-            day = -1;
-        } else if (age >= 18 && age < 20) {
+        if (age >= 16 && age < 18) {
+            day = 3;
+        }else if (age >= 18 && age < 20) {
             day = 3;
         } else if (age >= 20 && age < 30) {
             day = 4 + (age - 20) * 0.4;
@@ -42,7 +42,7 @@ public class _Helper {
         } else if (age >= 50 && age < 60) {
             day = 21 + (age - 50) * 0.9;
         }
-        return (long) ((int) (day * 24) * 60 * 60000);
+        return (long) ((int) (day * 24)) * 60 * 60000;
     }
 
     public static int getTargetInHour(DateTime birthday) {

@@ -1,4 +1,4 @@
-package com.wang17.religiouscalendar.helper;
+package com.wang17.religiouscalendar.util;
 
 import com.wang17.religiouscalendar.model.DateTime;
 import com.wang17.religiouscalendar.emnu.SolarTerm;
