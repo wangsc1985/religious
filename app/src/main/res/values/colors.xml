@@ -13,4 +13,5 @@
     <color name="progress_color1">#087400</color>
     <color name="progress_color2">#ff8c8e</color>
     <color name="progress_color3">#ff8c8e</color>
+    <color name="error_color">#e22431</color>
 </resources>

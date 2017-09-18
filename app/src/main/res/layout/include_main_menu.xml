@@ -127,7 +127,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="今"
-                android:textColor="@color/hint_foreground_material_light"
+                android:textColor="@color/month_text_color"
                 android:textSize="20dp"
                 android:textStyle="bold" />
         </FrameLayout>

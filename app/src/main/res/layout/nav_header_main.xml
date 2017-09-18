@@ -65,7 +65,7 @@
                 android:id="@+id/layout_record"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="@color/error_color"
+                android:background="@color/month_text_color"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:paddingLeft="30dp"

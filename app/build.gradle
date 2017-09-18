@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '23.0.2'
+    compileSdkVersion 26
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.wang17.religiouscalendar"
-        minSdkVersion 11
-        targetSdkVersion 25
-        versionCode 31
-        versionName '5.0.0'
+        minSdkVersion 14
+        targetSdkVersion 26
+        versionCode 32
+        versionName '5.1.0'
     }
     /**
      * 调试时使用自动签名，手动添加。
@@ -39,17 +39,12 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/httpmime-4.2.jar')
-    compile files('libs/mongo-java-driver-3.3.0.jar')
-    compile files('libs/mta-sdk-2.2.0.jar')
-    compile files('libs/umeng-analytics-v6.0.4.jar')
-    compile files('libs/utdid4all-1.0.4.jar')
     compile 'com.google.android.gms:play-services-appindexing:9.6.1'
-    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:design:26.0.0-alpha1'
+    //    compile 'com.android.support:support-v4:26.0.0-alpha1'
+    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okio:okio:1.10.0'
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:design:22.2.1'
     compile 'com.github.hotchemi:permissionsdispatcher:2.2.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     testCompile 'junit:junit:4.12'

@@ -34,7 +34,8 @@
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_setting"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+        </activity>
         <activity
             android:name=".activity.SexualDayRecordActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

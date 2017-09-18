@@ -82,9 +82,10 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     // 视图变量
+    private View headerView;
     private TextView textViewGanzhi, textViewYear, textView_fo, buttonToday, buttonMonth, textViewChijie1, textViewChijie2;
     private CalenderGridAdapter calendarAdapter;
     private ImageButton imageButton_leftMenu, imageButton_settting;
@@ -201,8 +202,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.setDrawerListener(toggle);
             toggle.syncState();
+
+
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
+            headerView = navigationView.getHeaderView(0);
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                    menuItemSelected(item);
+                    drawer.closeDrawer(GravityCompat.START);
+                    return true;
+                }
+            });
 
             //region 启动界面
 
@@ -299,9 +311,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             refreshCalendarTask = new RefreshCalendarTask();
 
             //region 持戒记录功能设置
-            layoutRecord = (LinearLayout) findViewById(R.id.layout_record);
-            textViewChijie1 = (TextView) findViewById(R.id.textView_chijie);
-            textViewChijie2 = (TextView) findViewById(R.id.textView_chijie2);
+            layoutRecord = headerView.findViewById(R.id.layout_record);
+            textViewChijie1 =  headerView.findViewById(R.id.textView_chijie);
+            textViewChijie2 = headerView.findViewById(R.id.textView_chijie2);
 
             initRecordPart();
 
@@ -310,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
             //region 左侧菜单操作
-            layoutYgx = (LinearLayout) findViewById(R.id.layout_ygx);
+            layoutYgx = headerView.findViewById(R.id.layout_ygx);
             layoutYgx.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -319,8 +331,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     startActivity(intent);
                 }
             });
-            layoutJinJi = (LinearLayout) findViewById(R.id.layout_jinji);
-            layoutJyw = (LinearLayout) findViewById(R.id.layout_jyw);
+            layoutJinJi =  headerView.findViewById(R.id.layout_jinji);
+            layoutJyw =  headerView.findViewById(R.id.layout_jyw);
             layoutJinJi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -391,7 +403,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             imageButton_leftMenu = (ImageButton) findViewById(R.id.imageButton_leftMenu);
             AnimationUtils.setRorateAnimation(this, imageButton_leftMenu, 7000);
-            imageButton_settting = (ImageButton) findViewById(R.id.imageButton_setting);
+            imageButton_settting =  headerView.findViewById(R.id.imageButton_setting);
 
             imageButton_leftMenu.setOnClickListener(leftMenuClick);
             imageButton_leftMenu.setOnLongClickListener(leftMenuLongClick);
@@ -719,10 +731,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.inflat_calender_item, null);
             try {
                 convertView = View.inflate(MainActivity.this, R.layout.inflat_calender_item, null);
-                TextView textViewYangLi = (TextView) convertView.findViewById(R.id.calenderItem_tv_YangLiDay);
-                TextView textViewNongLi = (TextView) convertView.findViewById(R.id.calendarItem_tv_NongLiDay);
-                ImageView imageIsToday = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsToday);
-                ImageView imageIsSelected = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsSelected);
+                TextView textViewYangLi = convertView.findViewById(R.id.calenderItem_tv_YangLiDay);
+                TextView textViewNongLi = convertView.findViewById(R.id.calendarItem_tv_NongLiDay);
+                ImageView imageIsToday = convertView.findViewById(R.id.calendarItem_cvIsToday);
+                ImageView imageIsSelected = convertView.findViewById(R.id.calendarItem_cvIsSelected);
                 if (calendarItemsMap.containsKey(position)) {
                     CalendarItem calendarItem = calendarItemsMap.get(position);
                     DateTime today = DateTime.getToday();
@@ -811,7 +823,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 || religious.contains("必得急疾")
                 || religious.contains("生子五官四肢不全。父母有灾")
                 || religious.contains("减寿五年")
-                || religious.contains("恶胎")) {
+                || religious.contains("恶胎")
+                || religious.contains("夺纪")) {
             return 1;
         }
         return 0;
@@ -1392,7 +1405,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                        imageButton_leftMenu.setVisibility(View.INVISIBLE);
                     } else {
 //                        buttonToday.setVisibility(View.INVISIBLE);
-                        buttonToday.setTextColor(getResources().getColor(R.color.hint_foreground_material_light));
+                        buttonToday.setTextColor(getResources().getColor(R.color.month_text_color));
                         buttonToday.setClickable(false);
 //                        imageButton_leftMenu.setVisibility(View.VISIBLE);
                     }
@@ -1579,15 +1592,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        menuItemSelected(item);
-
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     private boolean menuItemSelected(MenuItem menuItem) {
 
