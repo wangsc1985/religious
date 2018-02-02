@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE"/> -->
     <!-- &lt;!&ndash;获取网络状态&ndash;&gt; -->
     <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->
@@ -34,8 +35,7 @@
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_setting"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
-        </activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activity.SexualDayRecordActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
@@ -51,7 +51,8 @@
 
         <!-- <meta-data android:value="YOUR_APP_KEY" android:name="UMENG_APPKEY"/> -->
         <!-- <meta-data android:value="Channel ID" android:name="UMENG_CHANNEL"/> -->
-        <activity android:name=".activity.IntroduceActivity"></activity>
+        <activity android:name=".activity.IntroduceActivity" />
+        <activity android:name=".activity.UpdateIntroduceActivity"></activity>
     </application>
 
 </manifest>

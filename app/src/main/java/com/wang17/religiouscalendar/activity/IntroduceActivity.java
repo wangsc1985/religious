@@ -39,6 +39,8 @@ public class IntroduceActivity extends AppCompatActivity implements ActionBarFra
             textViewIntroduce.setText(R.string.jyw);
         }else if(itemName.equals(ItemName.印光大师序.toString())) {
             textViewIntroduce.setText(R.string.ygx);
+        }else if(itemName.equals(ItemName.升级详细.toString())) {
+            textViewIntroduce.setText(R.string.update_introduce);
         }
     }
 
@@ -48,6 +50,6 @@ public class IntroduceActivity extends AppCompatActivity implements ActionBarFra
     }
 
     public enum ItemName{
-        天地人禁忌,文昌帝君戒淫文,印光大师序,关于软件
+        天地人禁忌,文昌帝君戒淫文,印光大师序,升级详细
     }
 }

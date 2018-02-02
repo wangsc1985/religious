@@ -52,7 +52,6 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
     private Spinner spinner_zodiac1, spinner_zodiac2, spinner_mdtype, spinner_mdrelation, spinner_month, spinner_day, spinner_welcome, spinner_duration;
     private Button btn_addMD, btnRecordStatus, btnWay, btnBirthday, btnTarget;
     private CheckBox checkBox_szr, checkBox_lzr, checkBox_gyz;
-    private TextView textView_guide, textView_update;
 
     public static boolean isCalenderChanged, isRecordSetChanged;
     private DataContext dataContext;
@@ -78,8 +77,6 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             spinner_duration = (Spinner) findViewById(R.id.spinner_duration);
 
             btn_addMD = (Button) findViewById(R.id.button_addMD);
-            textView_guide = (TextView) findViewById(R.id.textView_guide);
-            textView_update = (TextView) findViewById(R.id.textView_update);
 
             checkBox_szr = (CheckBox) findViewById(R.id.checkBox_szr);
             checkBox_lzr = (CheckBox) findViewById(R.id.checkBox_lzr);
@@ -110,8 +107,6 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 //        if (UpdateManager.isUpdate())
 //            textView_update.setVisibility(View.VISIBLE);
 
-            TextView textViewVersion = (TextView) findViewById(R.id.textView_Version);
-            textViewVersion.setText("寿康宝鉴日历 " + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
 
             if (Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getValue()) == true) {
                 btnRecordStatus.setBackgroundResource(R.drawable.on);
@@ -304,13 +299,6 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 //                manager.startDownload();
 //            }
 //        });
-        textView_guide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GuideActivity.btnText = "返回软件";
-                startActivity(new Intent(SettingActivity.this, GuideActivity.class));
-            }
-        });
         checkBox_szr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

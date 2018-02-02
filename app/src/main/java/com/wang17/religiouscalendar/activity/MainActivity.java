@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout layout_religious;
     private GridView userCalender;
     private PopupWindow mPopWindow;
-    private LinearLayout layoutJinJi, layoutJyw, layoutYgx, layoutRecord, layoutWelcome;
+    private LinearLayout layoutJinJi, layoutJyw, layoutYgx, layoutRecord, layoutWelcome,layoutUpdateIntroduce;
     private ProgressBar progressBarLoading;
     // 类变量
     private DataContext dataContext;
@@ -332,7 +332,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
             layoutJinJi =  headerView.findViewById(R.id.layout_jinji);
-            layoutJyw =  headerView.findViewById(R.id.layout_jyw);
             layoutJinJi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -341,6 +340,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(intent);
                 }
             });
+            layoutJyw =  headerView.findViewById(R.id.layout_jyw);
             layoutJyw.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -349,6 +349,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(intent);
                 }
             });
+
+            layoutUpdateIntroduce =  headerView.findViewById(R.id.layout_shengji);
+            layoutUpdateIntroduce.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, UpdateIntroduceActivity.class);
+                    startActivity(intent);
+                }
+            });
+
             //endregion
 
 

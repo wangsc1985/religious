@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.wang17.religiouscalendar.activity.UpdateIntroduceActivity">
+
+    <fragment
+        android:id="@+id/fragment_action"
+        android:name="com.wang17.religiouscalendar.fragment.ActionBarFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_action_bar" />
+
+    <ScrollView
+        android:id="@+id/scrollView4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/layout_guide"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_action">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_introduce"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:padding="20dp"
+                android:text="@string/update_introduce"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_action"
+                app:layout_constraintVertical_bias="0.0" />
+        </LinearLayout>
+    </ScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/layout_guide"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:background="#efefef" />
+
+        <!--<TextView-->
+        <!--android:text="寿康宝鉴日历每次最新版本将第一时间发布在“360手机助手”和腾讯“应用宝”两个应用市场。其他应用市场都是由上面两个应用市场间接更新获取，更新时间不及时。如果想获取"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/textView11"-->
+        <!--android:layout_weight="1" />-->
+
+
+        <TextView
+            android:id="@+id/textView_update"
+            android:layout_width="150dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/btn_round_stroke"
+            android:gravity="center"
+            android:text="有新版本，点击升级"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#b90404"
+            android:textSize="13dp"
+            android:typeface="monospace"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textView_Version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/background_material_dark"
+            android:textSize="12dp"
+            android:typeface="monospace" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="反馈微信：645708679"
+            android:textColor="@color/background_material_dark"
+            android:textSize="12dp"
+            android:typeface="monospace" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="加微信申请验证时，请注明“寿康宝鉴”或“阿弥陀佛”。"
+            android:textColor="@color/calendar_yl_color"
+            android:textSize="10dp"
+            android:typeface="monospace" />
+
+        <TextView
+            android:id="@+id/textView_guide"
+            android:layout_width="100dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_round_stroke"
+            android:gravity="center"
+            android:text="软件使用帮助"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#b90404"
+            android:textSize="13dp"
+            android:typeface="monospace" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

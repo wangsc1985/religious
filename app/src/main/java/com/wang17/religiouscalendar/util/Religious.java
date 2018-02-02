@@ -337,7 +337,7 @@ public class Religious {
             DateTime tempday = day.addDays(1);
             Lunar tmpLunar = new Lunar(tempday);
             while (tmpLunar.getMonth() == lunar.getMonth()) {
-                maxDay = lunar.getDay();
+                maxDay = tmpLunar.getDay();
                 tempday = tempday.addDays(1);
                 tmpLunar = new Lunar(tempday);
             }

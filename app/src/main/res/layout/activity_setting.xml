@@ -73,7 +73,6 @@
 
                 <include layout="@layout/include_separation0" />
 
-                <include layout="@layout/include_setting_part7" />
             </LinearLayout>
         </ScrollView>
 
