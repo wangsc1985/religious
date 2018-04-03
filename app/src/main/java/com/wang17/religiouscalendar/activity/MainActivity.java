@@ -624,11 +624,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setContentView(contentView);
         //设置各个控件的点击响应
-        TextView tv0 = (TextView) contentView.findViewById(R.id.item00);
-        TextView tv1 = (TextView) contentView.findViewById(R.id.item01);
-        TextView tv2 = (TextView) contentView.findViewById(R.id.item02);
-        TextView tv3 = (TextView) contentView.findViewById(R.id.item03);
-        TextView tv4 = (TextView) contentView.findViewById(R.id.item04);
+        TextView tv0 =  contentView.findViewById(R.id.item00);
+        TextView tv1 = contentView.findViewById(R.id.item01);
+        TextView tv2 =  contentView.findViewById(R.id.item02);
+        TextView tv3 = contentView.findViewById(R.id.item03);
+        TextView tv4 =  contentView.findViewById(R.id.item04);
         tv0.setOnClickListener(this);
         tv1.setOnClickListener(this);
         tv2.setOnClickListener(this);
@@ -1649,7 +1649,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         View view = View.inflate(MainActivity.this, R.layout.inflate_dialog_date_picker, null);
         android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(MainActivity.this).setView(view).create();
-        dialog.setTitle("设定时间");
+        dialog.setTitle("最后一次行房日期");
 
         DateTime dateTime = new DateTime();
         final int year = dateTime.getYear();
