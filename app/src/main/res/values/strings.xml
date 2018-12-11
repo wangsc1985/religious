@@ -65,7 +65,11 @@
         光亲耀祖，这是印光所长时焚香祷祝的。果能如此，则不但是普天下人民的福，也是国家的福。\n\n  　　
         民国十六年丁卯季春常惭愧僧释印光谨撰</string>
     <string name="update_introduce">
-        5.1.1  修复“毁败日”BUG。
+        5.2.0\n
+        \t支持android 8及android 9。\n
+        \t修复部分机型闪退BUG。\n\n
+        5.1.1\n
+        \t修复“毁败日”BUG。
     </string>
 
 </resources>

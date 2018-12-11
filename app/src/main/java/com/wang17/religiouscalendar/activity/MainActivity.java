@@ -39,7 +39,9 @@ import android.widget.NumberPicker;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.mob.MobSDK;
 import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.emnu.SolarTerm;
@@ -74,6 +76,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
 import permissions.dispatcher.OnPermissionDenied;
@@ -418,6 +421,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             imageButton_leftMenu.setOnClickListener(leftMenuClick);
             imageButton_leftMenu.setOnLongClickListener(leftMenuLongClick);
             imageButton_settting.setOnClickListener(settingClick);
+            imageButton_settting.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+//                    showShare();
+                    return true;
+                }
+            });
 
 
             AssetManager mgr = getAssets();//得到AssetManager
@@ -1806,5 +1816,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .show();
     }
     //endregion
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
 
+        // title标题，微信、QQ和QQ空间等平台使用
+        oks.setTitle("寿康宝鉴夫妻保身立命戒期日历");
+        // titleUrl QQ和QQ空间跳转链接
+        oks.setTitleUrl("http://sj.qq.com/myapp/detail.htm?apkName=com.wang17.religiouscalendar");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("我是分享文本");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+//        oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        // url在微信、微博，Facebook等平台中使用
+        oks.setUrl("http://sj.qq.com/myapp/detail.htm?apkName=com.wang17.religiouscalendar");
+        // comment是我对这条分享的评论，仅在人人网使用
+        oks.setComment("我是测试评论文本");
+        // 启动分享GUI
+        oks.show(this);
+    }
 }

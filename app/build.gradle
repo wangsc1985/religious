@@ -1,14 +1,52 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.mob.sdk'
+
+MobSDK {
+    appKey "21b3835eb516a"
+    appSecret "c8d71d7da349afcc9d1bf5e6ea5d18e8"
+
+    ShareSDK {
+        //平台配置信息
+        devInfo {
+            SinaWeibo {
+                appKey "568898243"
+                appSecret "38a4f8204cc784f81f9f0daaf31e02e3"
+                callbackUri "http://www.sharesdk.cn"
+                shareByAppClient false
+            }
+            Wechat {
+                appId "wx4868b35061f87885"
+                appSecret "64020361b8ec4c99936c0e3999a9f249"
+            }
+            WechatMoments{
+                appId "wx4868b35061f87885"
+                appSecret "64020361b8ec4c99936c0e3999a9f249"
+            }
+            QQ {
+                appId "100371282"
+                appKey "aed9b0303e3ed1e27bae87c33761161d"
+            }
+            QZone{
+                appId "100371282"
+                appKey "aed9b0303e3ed1e27bae87c33761161d"
+            }
+            TencentWeibo{
+                appKey("801307650")
+                appSecret "ae36f4ee3946e1cbb98d6965b0b2ff5c"
+            }
+        }
+    }
+}
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.wang17.religiouscalendar"
-        minSdkVersion 14
-        targetSdkVersion 26
-        versionCode 33
-        versionName '5.1.1'
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 34
+        versionName '5.2.0'
     }
     /**
      * 调试时使用自动签名，手动添加。
@@ -39,9 +77,11 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleDeprecated
     compile 'com.google.android.gms:play-services-appindexing:9.6.1'
     compile 'com.android.support:design:26.0.0-alpha1'
     //    compile 'com.android.support:support-v4:26.0.0-alpha1'
+    //noinspection GradleCompatible
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okio:okio:1.10.0'
