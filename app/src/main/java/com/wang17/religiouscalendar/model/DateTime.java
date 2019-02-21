@@ -4,6 +4,7 @@ import com.wang17.religiouscalendar.util._String;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 /**
  * Created by 阿弥陀佛 on 2015/6/24.
@@ -11,18 +12,22 @@ import java.util.GregorianCalendar;
 public class DateTime extends GregorianCalendar {
 
     public DateTime() {
+        this.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
     }
 
     public DateTime(long timeInMillis) {
+        this.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         this.setTimeInMillis(timeInMillis);
     }
 
     public DateTime(int year, int month, int day) {
+        this.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         this.set(year, month, day, 0, 0, 0);
         this.set(Calendar.MILLISECOND, 0);
     }
 
     public DateTime(int year, int month, int day, int hour, int minute, int second) {
+        this.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         this.set(year, month, day, hour, minute, second);
         this.set(Calendar.MILLISECOND, 0);
     }
@@ -38,7 +43,8 @@ public class DateTime extends GregorianCalendar {
      * @return
      */
     public DateTime getDate() {
-        return new DateTime(this.get(YEAR), this.get(MONTH), this.get(DAY_OF_MONTH));
+        DateTime datetime=new DateTime(this.get(YEAR), this.get(MONTH), this.get(DAY_OF_MONTH));
+        return datetime;
     }
 
     public DateTime addMonths(int months) {
