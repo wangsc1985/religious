@@ -15,7 +15,7 @@
         android:adjustViewBounds="true"
         android:background="#2633a1"
         android:contentDescription=""
-        android:src="@mipmap/banner01" />
+        android:src="@drawable/banner01" />
 
 
 </FrameLayout>

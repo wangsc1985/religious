@@ -26,12 +26,12 @@
             style="@style/MyTextViewTitle2Style"
             android:text="状态：" />
 
-        <Button
+        <ImageButton
             android:id="@+id/button_recordStatus"
             style="@style/MyButtonStyle"
             android:layout_width="51dp"
             android:layout_height="26dp"
-            android:background="@drawable/on" />
+            android:src="@mipmap/on" />
 
 
     </LinearLayout>

@@ -24,9 +24,10 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="170dp"
-                android:layout_height="390dp"
+                android:layout_height="400dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@mipmap/amtf" />
+                android:layout_marginTop="15dp"
+                android:src="@drawable/amtf" />
 
         </LinearLayout>
 
@@ -64,7 +65,7 @@
             <LinearLayout
                 android:id="@+id/layout_record"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:background="@color/month_text_color"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -74,7 +75,9 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <TextView
                         android:id="@+id/textView_chijie"
@@ -187,7 +190,8 @@
                 android:layout_height="match_parent"
                 android:gravity="left|center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="20dp">
+                android:paddingLeft="20dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/imageView5"

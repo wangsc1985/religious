@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -50,8 +51,9 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 
     private LinearLayout layoutBirthday;
     private Spinner spinner_zodiac1, spinner_zodiac2, spinner_mdtype, spinner_mdrelation, spinner_month, spinner_day, spinner_welcome, spinner_duration;
-    private Button btn_addMD, btnRecordStatus, btnWay, btnBirthday, btnTarget;
+    private Button btn_addMD, btnWay, btnBirthday, btnTarget;
     private CheckBox checkBox_szr, checkBox_lzr, checkBox_gyz;
+    private ImageButton btnRecordStatus;
 
     public static boolean isCalenderChanged, isRecordSetChanged;
     private DataContext dataContext;
@@ -85,7 +87,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             layoutBirthday = (LinearLayout) findViewById(R.id.layout_birthday);
 //            layoutOpened = (LinearLayout) findViewById(R.id.layout_opened);
 
-            btnRecordStatus = (Button) findViewById(R.id.button_recordStatus);
+            btnRecordStatus = (ImageButton) findViewById(R.id.button_recordStatus);
 //            btnWay = (Button) findViewById(R.id.button_targetWay);
             btnBirthday = (Button) findViewById(R.id.button_birthday);
             btnTarget = (Button) findViewById(R.id.button_customTarget);
@@ -109,9 +111,9 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 
 
             if (Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.recordIsOpened, false).getValue()) == true) {
-                btnRecordStatus.setBackgroundResource(R.drawable.on);
+                btnRecordStatus.setImageResource(R.mipmap.on);
             } else {
-                btnRecordStatus.setBackgroundResource(R.drawable.off);
+                btnRecordStatus.setImageResource(R.mipmap.off);
             }
 
             autoWayDataInit();
@@ -127,16 +129,16 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                             showBirthdayDialog(SettingActivity.this, "请先设定生日", new CallBack() {
                                 @Override
                                 public void execute() {
-                                    btnRecordStatus.setBackgroundResource(R.drawable.on);
+                                    btnRecordStatus.setImageResource(R.mipmap.on);
                                     dataContext.editSetting(Setting.KEYS.recordIsOpened, true);
                                 }
                             });
                         } else {
-                            btnRecordStatus.setBackgroundResource(R.drawable.on);
+                            btnRecordStatus.setImageResource(R.mipmap.on);
                             dataContext.editSetting(Setting.KEYS.recordIsOpened, true);
                         }
                     } else {
-                        btnRecordStatus.setBackgroundResource(R.drawable.off);
+                        btnRecordStatus.setImageResource(R.mipmap.off);
                         dataContext.editSetting(Setting.KEYS.recordIsOpened, false);
                     }
                     isRecordSetChanged = true;
@@ -736,7 +738,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                                 && dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == false
                                 && dataContext.getSetting(Setting.KEYS.targetInHour) == null) {
                             dataContext.editSetting(Setting.KEYS.recordIsOpened, false);
-                            btnRecordStatus.setBackgroundResource(R.drawable.off);
+                            btnRecordStatus.setImageResource(R.drawable.off);
                         }
                     } catch (Exception e) {
                         _Utils.printException(context, e);

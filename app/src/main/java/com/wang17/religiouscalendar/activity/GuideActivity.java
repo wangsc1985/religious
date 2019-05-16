@@ -64,9 +64,9 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
              pics = getIntent().getIntegerArrayListExtra("pics");
             if(pics==null){
                 pics = new ArrayList<>();
-                pics.add(R.mipmap.guide001);
-                pics.add(R.mipmap.guide002);
-                pics.add(R.mipmap.guide003);
+                pics.add(R.drawable.guide001);
+                pics.add(R.drawable.guide002);
+                pics.add(R.drawable.guide003);
             }
 
             //初始化引导图片列表

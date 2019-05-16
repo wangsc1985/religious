@@ -169,11 +169,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int latestVersionCode = context.getSetting(Setting.KEYS.latestVersionCode, 0).getInt();
 
             if (latestVersionCode < 13) {
-                pics.add(R.mipmap.guide001);
-                pics.add(R.mipmap.guide002);
+                pics.add(R.drawable.guide001);
+                pics.add(R.drawable.guide002);
             }
             if (latestVersionCode < 25) {
-                pics.add(R.mipmap.guide003);
+                pics.add(R.drawable.guide003);
             }
 //            if(latestVersionCode<30){
 //                upgradeText+=" · 右下角添加进入下一月快捷键。\n\n" +
@@ -298,6 +298,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setTextForRecord(String text1, String text2) {
+        if(!text2.isEmpty()){
+            text1="已持戒："+text1;
+            text2=text2+"后，元气恢复。";
+        }
         textViewChijie1.setText(text1);
         textViewChijie2.setText(text2);
     }
@@ -613,9 +617,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         leaveInHour *= -1;
                         setTextForRecord(DateTime.toSpanString(haveInHour), "+" + DateTime.toSpanString(leaveInHour));
                     }
-
+                    textViewChijie2.setVisibility(View.VISIBLE);
                 } else {
                     setTextForRecord("点击添加记录", "");
+                    textViewChijie2.setVisibility(View.GONE);
                 }
 
             } else {
