@@ -52,7 +52,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
     private LinearLayout layoutBirthday;
     private Spinner spinner_zodiac1, spinner_zodiac2, spinner_mdtype, spinner_mdrelation, spinner_month, spinner_day, spinner_welcome, spinner_duration;
     private Button btn_addMD, btnWay, btnBirthday, btnTarget;
-    private CheckBox checkBox_szr, checkBox_lzr, checkBox_gyz;
+    private CheckBox checkBox_szr, checkBox_lzr, checkBox_gyz, checkBox_weekend_first;
     private ImageButton btnRecordStatus;
 
     public static boolean isCalenderChanged, isRecordSetChanged;
@@ -83,6 +83,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             checkBox_szr = (CheckBox) findViewById(R.id.checkBox_szr);
             checkBox_lzr = (CheckBox) findViewById(R.id.checkBox_lzr);
             checkBox_gyz = (CheckBox) findViewById(R.id.checkBox_gyz);
+            checkBox_weekend_first = (CheckBox) findViewById(R.id.checkBox_weekend_first);
 
             layoutBirthday = (LinearLayout) findViewById(R.id.layout_birthday);
 //            layoutOpened = (LinearLayout) findViewById(R.id.layout_opened);
@@ -165,6 +166,8 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             checkBox_lzr.setChecked(Boolean.parseBoolean(lzr.getValue()));
             Setting gyz = dataContext.getSetting(Setting.KEYS.gyz, false);
             checkBox_gyz.setChecked(Boolean.parseBoolean(gyz.getValue()));
+            checkBox_weekend_first.setChecked(dataContext.getSetting(Setting.KEYS.is_weekend_first, true).getBoolean());
+
 
             /**
              * 太岁日
@@ -301,6 +304,16 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 //                manager.startDownload();
 //            }
 //        });
+        checkBox_weekend_first.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (buttonView.isPressed()) {
+                        dataContext.editSetting(Setting.KEYS.is_weekend_first, isChecked);
+                        isCalenderChanged = true;
+                        snackbarSaved();
+                    }
+                }
+            });
         checkBox_szr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -654,9 +667,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             }
         });
 
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener()
-
-        {
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {

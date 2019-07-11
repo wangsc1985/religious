@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout layout_religious;
     private GridView userCalender;
     private PopupWindow mPopWindow;
-    private LinearLayout layoutJinJi, layoutJyw, layoutYgx, layoutRecord, layoutWelcome,layoutUpdateIntroduce;
+    private LinearLayout layoutJinJi, layoutJyw, layoutYgx, layoutRecord, layoutWelcome, layoutUpdateIntroduce;
     private ProgressBar progressBarLoading;
     // 类变量
     private DataContext dataContext;
@@ -116,6 +116,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Handler uiHandler;
     private static final int TO_SEXUAL_RECORD_ACTIVITY = 298;
     public static final int TO_SETTING_ACTIVITY = 1;
+
+    public CalenderHeaderGridAdapter calenderHeaderGridAdapter;
+    private boolean isWeekendFirst;
 
     private int welcomeDurationIndex;
 
@@ -156,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DataContext context = new DataContext(this);
 
 
+            isWeekendFirst = context.getSetting(Setting.KEYS.is_weekend_first, true).getBoolean();
             ArrayList<Integer> pics = new ArrayList<>();
 
             //region 升级说明及升级图板
@@ -298,9 +302,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setTextForRecord(String text1, String text2) {
-        if(!text2.isEmpty()){
-            text1="已持戒："+text1;
-            text2=text2+"后，元气恢复。";
+        if (!text2.isEmpty()) {
+            text1 = "已持戒：" + text1;
+            text2 = text2 + "后，元气恢复。";
         }
         textViewChijie1.setText(text1);
         textViewChijie2.setText(text2);
@@ -319,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //region 持戒记录功能设置
             layoutRecord = headerView.findViewById(R.id.layout_record);
-            textViewChijie1 =  headerView.findViewById(R.id.textView_chijie);
+            textViewChijie1 = headerView.findViewById(R.id.textView_chijie);
             textViewChijie2 = headerView.findViewById(R.id.textView_chijie2);
 
             initRecordPart();
@@ -338,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(intent);
                 }
             });
-            layoutJinJi =  headerView.findViewById(R.id.layout_jinji);
+            layoutJinJi = headerView.findViewById(R.id.layout_jinji);
             layoutJinJi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -347,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(intent);
                 }
             });
-            layoutJyw =  headerView.findViewById(R.id.layout_jyw);
+            layoutJyw = headerView.findViewById(R.id.layout_jyw);
             layoutJyw.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -357,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
 
-            layoutUpdateIntroduce =  headerView.findViewById(R.id.layout_shengji);
+            layoutUpdateIntroduce = headerView.findViewById(R.id.layout_shengji);
             layoutUpdateIntroduce.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -420,7 +424,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             imageButton_leftMenu = (ImageButton) findViewById(R.id.imageButton_leftMenu);
             AnimationUtils.setRorateAnimation(this, imageButton_leftMenu, 7000);
-            imageButton_settting =  headerView.findViewById(R.id.imageButton_setting);
+            imageButton_settting = headerView.findViewById(R.id.imageButton_setting);
 
             imageButton_leftMenu.setOnClickListener(leftMenuClick);
             imageButton_leftMenu.setOnLongClickListener(leftMenuLongClick);
@@ -507,7 +511,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             userCalender = (GridView) findViewById(R.id.userCalender);
             userCalender.setOnItemClickListener(userCalender_OnItemClickListener);
             GridView calendarHeader = (GridView) findViewById(R.id.userCalenderHeader);
-            calendarHeader.setAdapter(new CalenderHeaderGridAdapter()); // 添加星期标头
+            calenderHeaderGridAdapter = new CalenderHeaderGridAdapter();
+            calendarHeader.setAdapter(calenderHeaderGridAdapter); // 添加星期标头
 
             // 填充日历
             new Thread(new Runnable() {
@@ -594,8 +599,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
 
             if (dataContext.getSetting(Setting.KEYS.targetAuto, true).getBoolean() == false) {
-                dataContext.editSetting(Setting.KEYS.recordIsOpened,false);
-                dataContext.editSetting(Setting.KEYS.targetAuto,true);
+                dataContext.editSetting(Setting.KEYS.recordIsOpened, false);
+                dataContext.editSetting(Setting.KEYS.targetAuto, true);
                 dataContext.deleteSetting(Setting.KEYS.targetInHour);
 //                new AlertDialog.Builder(this).setMessage("系统移除了自定义行房周期功能，请到设置界面设置出生日期，再使用此功能。").setNegativeButton("知道了", null).show();
 //                return;
@@ -635,15 +640,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void showPopupWindow() {
         //设置contentView
         View contentView = LayoutInflater.from(MainActivity.this).inflate(R.layout.popup_window, null);
-        mPopWindow = new PopupWindow(contentView,
-                DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.WRAP_CONTENT, true);
+        mPopWindow = new PopupWindow(contentView, DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setContentView(contentView);
         //设置各个控件的点击响应
-        TextView tv0 =  contentView.findViewById(R.id.item00);
+        TextView tv0 = contentView.findViewById(R.id.item00);
         TextView tv1 = contentView.findViewById(R.id.item01);
-        TextView tv2 =  contentView.findViewById(R.id.item02);
+        TextView tv2 = contentView.findViewById(R.id.item02);
         TextView tv3 = contentView.findViewById(R.id.item03);
-        TextView tv4 =  contentView.findViewById(R.id.item04);
+        TextView tv4 = contentView.findViewById(R.id.item04);
         tv0.setOnClickListener(this);
         tv1.setOnClickListener(this);
         tv2.setOnClickListener(this);
@@ -700,7 +704,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 自定义日历标头适配器
      */
     protected class CalenderHeaderGridAdapter extends BaseAdapter {
-        private String[] header = {"一", "二", "三", "四", "五", "六", "日"};
+        private String[] header;
+
+        public CalenderHeaderGridAdapter() {
+            if(isWeekendFirst){
+                this.header =new String[] { "日","一", "二", "三", "四", "五", "六"};
+            }else{
+                this.header = new String[] {"一", "二", "三", "四", "五", "六", "日"};
+            }
+        }
 
         @Override
         public int getCount() {
@@ -728,6 +740,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mTextView.setTextColor(Color.parseColor("#000000"));
             mTextView.setWidth(60);
             return mTextView;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            if(isWeekendFirst){
+                this.header =new String[] { "日","一", "二", "三", "四", "五", "六"};
+            }else{
+                this.header = new String[] {"一", "二", "三", "四", "五", "六", "日"};
+            }
+            super.notifyDataSetChanged();
         }
     }
 
@@ -969,10 +991,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int maxDayInMonth = 0;
             DateTime tmpToday = new DateTime(currentYear, currentMonth, 1);
             calendarItemLength = maxDayInMonth = tmpToday.getActualMaximum(DateTime.DAY_OF_MONTH);
-            int day_week = tmpToday.get(DateTime.DAY_OF_WEEK) - 1;
-            if (day_week == 0)
-                day_week = 7;
-            calendarItemLength += day_week - 1;
+
+            if (isWeekendFirst) {
+                int day_week = tmpToday.get(DateTime.DAY_OF_WEEK);
+                calendarItemLength += day_week - 1;
+            }else{
+                int day_week = tmpToday.get(DateTime.DAY_OF_WEEK) - 1;
+                if (day_week == 0)
+                    day_week = 7;
+                calendarItemLength += day_week - 1;
+            }
 
             // “今”按钮是否显示
             DateTime today = DateTime.getToday();
@@ -986,22 +1014,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             boolean tag = false;
             for (int i = 1; i <= maxDayInMonth; i++) {
                 int week = tmpToday.get(DateTime.WEEK_OF_MONTH);
-                day_week = tmpToday.get(DateTime.DAY_OF_WEEK) - 1;
-                if (day_week == 0) {
-                    day_week = 7;
-                    week--;
-                    if (week == 0) {
-                        tag = true;
+                if (isWeekendFirst) {
+                    int day_week = tmpToday.get(DateTime.DAY_OF_WEEK);
+                    int key = (week - 1) * 7 + day_week - 1;
+                    DateTime newCalendar = new DateTime();
+                    newCalendar.setTimeInMillis(tmpToday.getTimeInMillis());
+                    CalendarItem item = new CalendarItem(newCalendar);
+                    calendarItemsMap.put(key, item);
+                } else {
+                    int day_week = tmpToday.get(DateTime.DAY_OF_WEEK) - 1;
+                    if (day_week == 0) {
+                        day_week = 7;
+                        week--;
+                        if (week == 0) {
+                            tag = true;
+                        }
                     }
+                    if (tag) {
+                        week++;
+                    }
+                    int key = (week - 1) * 7 + day_week - 1;
+                    DateTime newCalendar = new DateTime();
+                    newCalendar.setTimeInMillis(tmpToday.getTimeInMillis());
+                    CalendarItem item = new CalendarItem(newCalendar);
+                    calendarItemsMap.put(key, item);
                 }
-                if (tag) {
-                    week++;
-                }
-                int key = (week - 1) * 7 + day_week - 1;
-                DateTime newCalendar = new DateTime();
-                newCalendar.setTimeInMillis(tmpToday.getTimeInMillis());
-                CalendarItem item = new CalendarItem(newCalendar);
-                calendarItemsMap.put(key, item);
                 tmpToday.add(DateTime.DAY_OF_MONTH, 1);
             }
             // 填充日历控件
@@ -1015,6 +1052,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         userCalender.setAdapter(calendarAdapter);
                         refreshCalendarTask = new RefreshCalendarTask();
                         refreshCalendarTask.execute();
+                        calenderHeaderGridAdapter.notifyDataSetChanged();
                     } catch (Exception e) {
                         _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
                     }
@@ -1644,6 +1682,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case TO_SETTING_ACTIVITY:
                     if (SettingActivity.isCalenderChanged) {
 //                        refreshCalendarWithDialog("配置已更改，正在重新加载...");
+                        isWeekendFirst = dataContext.getSetting(Setting.KEYS.is_weekend_first, true).getBoolean();
                         refreshCalendar();
                     }
                     if (SettingActivity.isRecordSetChanged) {
@@ -1820,6 +1859,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setMessage(message)
                 .show();
     }
+
     //endregion
     private void showShare() {
         OnekeyShare oks = new OnekeyShare();

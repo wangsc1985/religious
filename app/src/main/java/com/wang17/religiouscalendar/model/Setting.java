@@ -42,7 +42,7 @@ public class Setting {
     }
 
     public enum KEYS{
-        banner,bannerPositoin,welcome,welcome_duration,zodiac1,zodiac2,szr,lzr,gyz,latestVersionCode,
-        recordIsOpened, targetAuto,birthday, targetInHour
+        banner,welcome,welcome_duration,zodiac1,zodiac2,szr,lzr,gyz,latestVersionCode,
+        recordIsOpened, targetAuto,birthday, is_weekend_first, targetInHour
     }
 }
