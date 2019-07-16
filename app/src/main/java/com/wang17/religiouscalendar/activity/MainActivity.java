@@ -1088,6 +1088,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     int progress;
 
+    private void disableButton(){
+        imageLeft.setEnabled(false);
+        imageRight.setEnabled(false);
+        buttonMonth.setEnabled(false);
+        buttonToday.setEnabled(false);
+        imageLeft.setColorFilter(Color.GRAY);
+        imageRight.setColorFilter(Color.GRAY);
+        buttonMonth.setTextColor(Color.GRAY);
+        buttonToday.setTextColor(Color.GRAY);
+    }
+    private void enableButton(){
+        imageLeft.setEnabled(true);
+        imageRight.setEnabled(true);
+        buttonMonth.setEnabled(true);
+        buttonToday.setEnabled(true);
+        imageLeft.setColorFilter(Color.TRANSPARENT);
+        imageRight.setColorFilter(Color.TRANSPARENT);
+        buttonMonth.setTextColor(getResources().getColor(R.color.month_text_color));
+        buttonToday.setTextColor(getResources().getColor(R.color.month_text_color));
+    }
+
     private class RefreshCalendarTask extends AsyncTask {
 
         /**
@@ -1099,7 +1120,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected Object doInBackground(Object[] params) {
             try {
+
                 progress = 0;
+                publishProgress(progress);
                 // 得到本月节气
                 for (Map.Entry<DateTime, SolarTerm> entry : solarTermMap.entrySet()) {
                     if (entry.getKey().getYear() == currentYear && entry.getKey().getMonth() == currentMonth) {
@@ -1154,6 +1177,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onProgressUpdate(Object[] values) {
             super.onProgressUpdate(values);
             progressBarLoading.setProgress((int) values[0]);
+            if((int) values[0]==0){
+                disableButton();
+            }
         }
 
         /**
@@ -1209,6 +1235,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         refreshInfoLayout(selectedDate);
                     }
                 }
+
+                enableButton();
             } catch (Exception e) {
                 _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
             } finally {
