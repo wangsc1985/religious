@@ -45,8 +45,8 @@ android {
         applicationId "com.wang17.religiouscalendar"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 39
-        versionName '5.3.0'
+        versionCode 40
+        versionName '5.3.1'
     }
     /**
      * 调试时使用自动签名，手动添加。

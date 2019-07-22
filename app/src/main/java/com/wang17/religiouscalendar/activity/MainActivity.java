@@ -707,10 +707,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         private String[] header;
 
         public CalenderHeaderGridAdapter() {
-            if(isWeekendFirst){
-                this.header =new String[] { "日","一", "二", "三", "四", "五", "六"};
-            }else{
-                this.header = new String[] {"一", "二", "三", "四", "五", "六", "日"};
+            if (isWeekendFirst) {
+                this.header = new String[]{"日", "一", "二", "三", "四", "五", "六"};
+            } else {
+                this.header = new String[]{"一", "二", "三", "四", "五", "六", "日"};
             }
         }
 
@@ -744,10 +744,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void notifyDataSetChanged() {
-            if(isWeekendFirst){
-                this.header =new String[] { "日","一", "二", "三", "四", "五", "六"};
-            }else{
-                this.header = new String[] {"一", "二", "三", "四", "五", "六", "日"};
+            if (isWeekendFirst) {
+                this.header = new String[]{"日", "一", "二", "三", "四", "五", "六"};
+            } else {
+                this.header = new String[]{"一", "二", "三", "四", "五", "六", "日"};
             }
             super.notifyDataSetChanged();
         }
@@ -831,19 +831,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * @return
      */
     private int dateTimeToPosition(DateTime dateTime, boolean tag) {
-        int week = dateTime.get(DateTime.WEEK_OF_MONTH);
-        int day_week = dateTime.get(DateTime.DAY_OF_WEEK) - 1;
-        if (day_week == 0) {
-            day_week = 7;
-            week--;
-            if (week == 0) {
-                tag = true;
+        if (isWeekendFirst) {
+            int week = dateTime.get(DateTime.WEEK_OF_MONTH);
+            int day_week = dateTime.get(DateTime.DAY_OF_WEEK);
+            return (week - 1) * 7 + day_week - 1;
+        } else {
+            int week = dateTime.get(DateTime.WEEK_OF_MONTH);
+            int day_week = dateTime.get(DateTime.DAY_OF_WEEK) - 1;
+            if (day_week == 0) {
+                day_week = 7;
+                week--;
+                if (week == 0) {
+                    tag = true;
+                }
             }
+            if (tag) {
+                week++;
+            }
+            return (week - 1) * 7 + day_week - 1;
         }
-        if (tag) {
-            week++;
-        }
-        return (week - 1) * 7 + day_week - 1;
     }
 
     private int findReligiousKeyWord(String religious) {
@@ -910,6 +916,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void refreshInfoLayout(DateTime seletedDateTime) {
         try {
+            Log.e("wangsc", "刷新信息板：" + seletedDateTime.toLongDateString());
             if (calendarItemsMap.size() == 0) return;
 
             CalendarItem calendarItem = null;
@@ -918,6 +925,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     calendarItem = entity.getValue();
                 }
             }
+
+
             if (calendarItem == null) return;
 //        yearMonth.setText(currentYear + "." + format(currentMonth + 1));
 //        yangliBig.setText(seletedDateTime.getDay() + "");
@@ -974,6 +983,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private static final String ww = "wangsc";
+
     /**
      * 刷新日历界面，使用此方法必须标明forAsynch变量。
      *
@@ -995,7 +1006,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (isWeekendFirst) {
                 int day_week = tmpToday.get(DateTime.DAY_OF_WEEK);
                 calendarItemLength += day_week - 1;
-            }else{
+            } else {
                 int day_week = tmpToday.get(DateTime.DAY_OF_WEEK) - 1;
                 if (day_week == 0)
                     day_week = 7;
@@ -1045,6 +1056,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             todayPosition = -1;
             preSelectedPosition = -1;
 
+
             uiHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -1088,7 +1100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     int progress;
 
-    private void disableButton(){
+    private void disableButton() {
         imageLeft.setEnabled(false);
         imageRight.setEnabled(false);
         buttonMonth.setEnabled(false);
@@ -1098,7 +1110,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonMonth.setTextColor(Color.GRAY);
         buttonToday.setTextColor(Color.GRAY);
     }
-    private void enableButton(){
+
+    private void enableButton() {
         imageLeft.setEnabled(true);
         imageRight.setEnabled(true);
         buttonMonth.setEnabled(true);
@@ -1177,7 +1190,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onProgressUpdate(Object[] values) {
             super.onProgressUpdate(values);
             progressBarLoading.setProgress((int) values[0]);
-            if((int) values[0]==0){
+            if ((int) values[0] == 0) {
                 disableButton();
             }
         }
@@ -1236,6 +1249,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
 
+                //region test
+                for (Map.Entry<Integer, CalendarItem> entity : calendarItemsMap.entrySet()) {
+                    log("\n序号：" + entity.getKey() + "，阳历：" + entity.getValue().getYangLi().toShortDateString() + "，农历：" + entity.getValue().getNongLi().getDayStr() + "\n" + entity.getValue().getReligious());
+                }
+                //endregion
                 enableButton();
             } catch (Exception e) {
                 _Utils.printExceptionSycn(MainActivity.this, uiHandler, e);
@@ -1254,6 +1272,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             progressBarLoading.setVisibility(View.VISIBLE);
             progressBarLoading.setProgress(0);
         }
+    }
+
+    private void log(String log) {
+        Log.e("wangsc", log);
     }
 
 
