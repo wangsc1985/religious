@@ -43,7 +43,7 @@ public class LunarDateTime {
     public String getMonthStr() {
         switch (month) {
             case 1:
-                return "一月";
+                return "正月";
             case 2:
                 return "二月";
             case 3:
@@ -63,9 +63,9 @@ public class LunarDateTime {
             case 10:
                 return "十月";
             case 11:
-                return "十一月";
+                return "冬月";
             case 12:
-                return "十二月";
+                return "腊月";
         }
         return "";
     }

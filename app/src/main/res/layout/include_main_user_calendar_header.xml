@@ -8,10 +8,10 @@
         android:id="@+id/userCalenderHeader"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#f1f1f1"
+        android:background="@color/calendar_header_color"
         android:numColumns="7"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"></GridView>
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"></GridView>
 
     <ProgressBar
         android:id="@+id/progressBar_loading"

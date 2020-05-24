@@ -18,16 +18,16 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:orientation="vertical"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="170dp"
-                android:layout_height="400dp"
+                android:layout_width="230dp"
+                android:layout_height="450dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="15dp"
-                android:src="@drawable/amtf" />
+                android:src="@drawable/jyt" />
 
         </LinearLayout>
 
@@ -209,7 +209,7 @@
                     android:textSize="18sp" />
 
             </LinearLayout>
-            <include layout="@layout/include_separation"></include>
+<!--            <include layout="@layout/include_separation"></include>-->
 
         </LinearLayout>
 

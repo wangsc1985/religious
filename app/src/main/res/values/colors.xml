@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#a7af11</color>
-    <!--<color name="colorPrimary">#e67e22</color>-->
-    <color name="colorPrimaryDark">#029789</color>
-    <color name="month_text_color">#b90404</color>
-    <color name="colorAccent">#ff4081</color>
+    <color name="colorPrimary">#00796A</color>
+    <color name="month_text_color">#B90404</color>
+    <color name="colorAccent">#FF4081</color>
     <color name="black_overlay">#66000000</color>
     <color name="dot_light_color">#061a2e</color>
     <color name="dot_dark_color">#b90404</color>
-    <color name="calendar_yl_color">#ff706d72</color>
-    <color name="calendar_nl_color">#aaa</color>
+    <color name="calendar_yl_color">#706D72</color>
+    <color name="calendar_nl_color">#919191</color>
     <color name="progress_color1">#087400</color>
     <color name="progress_color2">#ff8c8e</color>
     <color name="progress_color3">#ff8c8e</color>
     <color name="error_color">#e22431</color>
+    <color name="splite_line">#F2F2F2</color>
+    <color name="calendar_header_color">#F2F2F2</color>
 </resources>

@@ -39,9 +39,7 @@ import android.widget.NumberPicker;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.mob.MobSDK;
 import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.emnu.SolarTerm;
@@ -89,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // 视图变量
     private View headerView;
-    private TextView textViewGanzhi, textViewYear, textView_fo, buttonToday, buttonMonth, textViewChijie1, textViewChijie2;
+    private TextView textViewGanzhi, textViewNongLi, textViewYear, textViewFo, buttonToday, buttonMonth, textViewChijie1, textViewChijie2;
     private CalenderGridAdapter calendarAdapter;
     private ImageButton imageButton_leftMenu, imageButton_settting;
     private ImageView imageView_banner, imageView_welcome, imageLeft, imageRight;
@@ -443,13 +441,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fontGF = Typeface.createFromAsset(mgr, "fonts/GONGFANG.ttf");
 
 
-            textView_fo = (TextView) findViewById(R.id.tvfo);
-//            textView_fo.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+            textViewFo = (TextView) findViewById(R.id.tvfo);
+//            textViewFo.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
 //            ((TextView)findViewById(R.id.textView_banner_text)).setTypeface(fontHWZS);
-            textView_fo.setTypeface(fontGF);
-//            textView_fo.getPaint().setFakeBoldText(true);
+            textViewFo.setTypeface(fontGF);
+//            textViewFo.getPaint().setFakeBoldText(true);
             //
-            nianfo(textView_fo);
+            nianfo(textViewFo);
 
             // selectedDate
             selectedDate = DateTime.getToday();
@@ -468,7 +466,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            yearMonth = (TextView) findViewById(R.id.tvYearMonth);
 //            yangliBig = (TextView) findViewById(R.id.tvYangLiBig);
             buttonMonth = (TextView) findViewById(R.id.button_month);
-            buttonMonth.setTypeface(fontGF);
+//            buttonMonth.setTypeface(fontGF);
             buttonMonth.setOnClickListener(btnCurrentMonth_OnClickListener);
 
 
@@ -492,9 +490,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
 
             textViewYear = (TextView) findViewById(R.id.textView_year);
+            textViewYear.setOnClickListener(btnCurrentMonth_OnClickListener);
 //            textViewYear.setTypeface(fontGF);
-            textViewGanzhi = (TextView) findViewById(R.id.tvGanZhi);
-//            textViewGanzhi.setTypeface(fontHWZS);
+            textViewGanzhi = (TextView) findViewById(R.id.textView_ganZhi);
+
+////            textViewGanzhi.setTypeface(fontHWZS);
+            textViewNongLi = (TextView)findViewById(R.id.textView_nongLi);
             layout_religious = (LinearLayout) findViewById(R.id.linearReligious);
 
             // calendarAdapter
@@ -936,7 +937,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 GanZhi gz = new GanZhi(calendarItem.getYangLi(), this.solarTermMap);
                 textViewGanzhi.setText(_String.concat(gz.getTianGanYear(), gz.getDiZhiYear(), "年 ",
                         gz.getTianGanMonth(), gz.getDiZhiMonth(), "月 ",
-                        gz.getTianGanDay(), gz.getDiZhiDay(), "日"));
+                        gz.getTianGanDay(), gz.getDiZhiDay(), "日  [属",gz.getZodiac(),"]"));
+                textViewNongLi.setText(_String.concat(calendarItem.getNongLi().getMonthStr(),calendarItem.getNongLi().getDayStr()));
             } catch (Exception ex) {
                 _Utils.printExceptionSycn(MainActivity.this, uiHandler, ex);
             }
@@ -1103,22 +1105,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void disableButton() {
         imageLeft.setEnabled(false);
         imageRight.setEnabled(false);
-        buttonMonth.setEnabled(false);
-        buttonToday.setEnabled(false);
+//        buttonMonth.setEnabled(false);
+//        buttonToday.setEnabled(false);
         imageLeft.setColorFilter(Color.GRAY);
         imageRight.setColorFilter(Color.GRAY);
-        buttonMonth.setTextColor(Color.GRAY);
+//        buttonMonth.setTextColor(Color.GRAY);
         buttonToday.setTextColor(Color.GRAY);
     }
 
     private void enableButton() {
         imageLeft.setEnabled(true);
         imageRight.setEnabled(true);
-        buttonMonth.setEnabled(true);
-        buttonToday.setEnabled(true);
+//        buttonMonth.setEnabled(true);
+//        buttonToday.setEnabled(true);
         imageLeft.setColorFilter(Color.TRANSPARENT);
         imageRight.setColorFilter(Color.TRANSPARENT);
-        buttonMonth.setTextColor(getResources().getColor(R.color.month_text_color));
+//        buttonMonth.setTextColor(getResources().getColor(R.color.month_text_color));
         buttonToday.setTextColor(getResources().getColor(R.color.month_text_color));
     }
 
@@ -1512,14 +1514,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void run() {
                     if (value) {
-//                        buttonToday.setVisibility(View.VISIBLE);
-                        buttonToday.setTextColor(getResources().getColor(R.color.month_text_color));
-                        buttonToday.setClickable(true);
+                        buttonToday.setVisibility(View.VISIBLE);
+//                        buttonToday.setTextColor(getResources().getColor(R.color.month_text_color));
+//                        buttonToday.setClickable(true);
 //                        imageButton_leftMenu.setVisibility(View.INVISIBLE);
                     } else {
-//                        buttonToday.setVisibility(View.INVISIBLE);
-                        buttonToday.setTextColor(getResources().getColor(R.color.month_text_color));
-                        buttonToday.setClickable(false);
+                        buttonToday.setVisibility(View.INVISIBLE);
+//                        buttonToday.setTextColor(getResources().getColor(R.color.month_text_color));
+//                        buttonToday.setClickable(false);
 //                        imageButton_leftMenu.setVisibility(View.VISIBLE);
                     }
                 }

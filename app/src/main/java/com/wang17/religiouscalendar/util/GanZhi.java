@@ -37,6 +37,35 @@ public class GanZhi {
         return MINIMAL_DATE;
     }
 
+    public String getZodiac(){
+        switch (getDiZhiYear()){
+            case  "亥":
+                return "猪";
+            case  "子":
+                return "鼠";
+            case  "丑":
+                return "牛";
+            case   "寅":
+                return "虎";
+            case   "卯":
+                return "兔";
+            case   "辰":
+                return "龙";
+            case   "巳":
+                return "蛇";
+              case   "午":
+                  return "马";
+            case    "未":
+                return "羊";
+            case    "申":
+                return "猴";
+            case    "酉":
+                return "鸡";
+            case    "戌":
+                return "狗";
+        }
+        return "";
+    }
 
     public String getTianGanYear() {
         return tianGanYear;

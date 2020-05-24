@@ -6,6 +6,10 @@ buildscript {
         maven {
             url "http://mvn.mob.com/android"
         }
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
     dependencies {
         classpath 'com.mob.sdk:MobSDK:+'
@@ -19,6 +23,10 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
 }
 
